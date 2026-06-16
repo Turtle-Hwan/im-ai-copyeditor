@@ -20,7 +20,7 @@ case "${1:-}" in
   *) echo "모르는 인자: $1" >&2; exit 2 ;;
 esac
 
-SKILLS=(paraphrasing-korean paraphrasing-korean-sentence paraphrasing-korean-trans paraphrasing-korean-ai)
+SKILLS=(paraphrasing-korean paraphrasing-korean-sentence paraphrasing-korean-trans paraphrasing-korean-ai paraphrasing-korean-grammar)
 
 remove_if_ours() {  # $1=dest, $2=src
   local dest="$1" src="$2"

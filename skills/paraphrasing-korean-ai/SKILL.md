@@ -1,6 +1,6 @@
 ---
 name: paraphrasing-korean-ai
-description: AI(ChatGPT·Claude·Gemini)가 쓴 한글의 "AI 티"를 문장 단위로 걷어 낸다. 기계적 나열(첫째/둘째), 결말 공식(결국/시사하는 바가 크다), 과장 어휘, 이모지·과한 불릿/볼드, 비슷한 길이·종결 반복, 표현을 자꾸 누그러뜨리기, 문두 접속사 남발, "것이다" 식 맺음을 자연스럽게. 뜻은 한 글자도 바꾸지 않는다. 트리거 — "AI 티 빼줘", "GPT 문체 자연스럽게", "AI 같은 글 사람처럼", "휴머나이즈". 문장 다이어트까지: -sentence / 번역투까지: -trans / 전부: paraphrasing-korean.
+description: AI(ChatGPT·Claude·Gemini)가 쓴 한글의 "AI 티"를 문장 단위로 걷어 낸다. 기계적 나열(첫째/둘째), 결말 공식(결국/시사하는 바가 크다), 과장 어휘, 이모지·과한 불릿/볼드, 비슷한 길이·종결 반복, 표현을 자꾸 누그러뜨리기, 문두 접속사 남발, "것이다" 식 맺음을 자연스럽게. 뜻은 한 글자도 바꾸지 않는다. 트리거 — "AI 티 빼줘", "GPT 문체 자연스럽게", "AI 같은 글 사람처럼", "휴머나이즈". 문장 다이어트까지: -sentence / 번역투까지: -trans / 맞춤법·문체: -grammar / 전부: paraphrasing-korean.
 ---
 
 # paraphrasing-korean-ai — AI 티 제거

@@ -20,7 +20,7 @@ DRYRUN=0
 TS="$(date +%Y%m%d-%H%M%S)"
 
 # 설치할 스킬 폴더(영문 별칭 -sentence 포함).
-SKILLS=(paraphrasing-korean paraphrasing-korean-sentence paraphrasing-korean-trans paraphrasing-korean-ai)
+SKILLS=(paraphrasing-korean paraphrasing-korean-sentence paraphrasing-korean-trans paraphrasing-korean-ai paraphrasing-korean-grammar)
 
 print_help() {
   cat <<'H'
