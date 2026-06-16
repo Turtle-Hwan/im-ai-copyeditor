@@ -1,9 +1,9 @@
 ---
 name: paraphrasing-korean-trans
-description: 한국어 번역투를 문장 단위로 걷어 낸다. 피동태→능동, "가지다"(have) 직역, "-로 인하여/-에 대하여/-을 통해", 무생물·추상 주어, 영어 대명사(그/그녀/그것/그들) 남용, 관계절 좌향 수식 등을 자연스러운 한국어로. 뜻은 한 글자도 바꾸지 않는다. 트리거 — "번역투 고쳐", "번역체 자연스럽게", "영어 직역 티 빼줘", "번역투 제거". 문장 다이어트까지: -sentence / AI 티까지: -ai / 맞춤법·문체: -grammar / 전부: paraphrasing-korean.
+description: 한국어 번역 문체를 문장 단위로 걷어 낸다. 피동태→능동, "가지다"(have) 직역, "-로 인하여/-에 대하여/-을 통해", 무생물·추상 주어, 영어 대명사(그/그녀/그것/그들) 남용, 관계절 좌향 수식 등을 자연스러운 한국어로. 뜻은 한 글자도 바꾸지 않는다. 트리거 — "번역 문체 고쳐", "번역체 자연스럽게", "영어 직역 티 빼줘", "번역 문체 제거". 문장 다이어트까지: -sentence / AI 문체까지: -ai / 맞춤법·문체: -grammar / 전부: paraphrasing-korean.
 ---
 
-# paraphrasing-korean-trans — 번역투 제거
+# paraphrasing-korean-trans — 번역 문체 제거
 
 영어 직역 흔적을 문장 단위로 자연스러운 한국어로 바꾼다(grep 금지). 의미·수치·고유명사·인용 보존.
 
@@ -11,7 +11,7 @@ description: 한국어 번역투를 문장 단위로 걷어 낸다. 피동태→
 
 ## 절차
 
-**Phase 0** — 상태 한 줄: `paraphrasing-korean-trans (번역투) / run_id: {YYYY-MM-DD-NNN}`
+**Phase 0** — 상태 한 줄: `paraphrasing-korean-trans (번역 문체) / run_id: {YYYY-MM-DD-NNN}`
 **Phase 1** — 입력을 `_workspace/{run_id}/01_input.txt` 저장.
 **Phase 2** — `python3 $SKILL/scripts/segment.py _workspace/{run_id}/01_input.txt --outdir _workspace/{run_id}` → segments.json + worksheet.md, 문장 수 N 확인.
 **Phase 2.5 (선택)** — `python3 $SKILL/scripts/scan.py _workspace/{run_id}/worksheet.md` → 의심 규칙을 `힌트:` 로 표시(참고용, 오탐 가능, 윤문을 대신하지 않음).
@@ -24,4 +24,4 @@ description: 한국어 번역투를 문장 단위로 걷어 낸다. 피동태→
 - `장르: 칼럼|리포트|블로그|공적` · `강도: 보수|기본|적극`(기본값 기본)
 
 ## 주의
-의미 불변 최상위. 수치·고유명사·인용 불가침. `-의` 자체는 번역투가 아니다(어색한 이중조사만 손본다).
+의미 불변 최상위. 수치·고유명사·인용 불가침. `-의` 자체는 번역 문체가 아니다(어색한 이중조사만 손본다).

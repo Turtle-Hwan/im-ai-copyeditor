@@ -6,8 +6,8 @@ labels: ["rule-or-example"]
 ---
 
 ## 종류
-- [ ] 번역투 translationese
-- [ ] AI 티 ai-tell
+- [ ] 번역 문체 translationese
+- [ ] AI 문체 ai-tell
 - [ ] 문장 다이어트 sentence
 
 ## 어색한 표현

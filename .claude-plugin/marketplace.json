@@ -12,9 +12,9 @@
     {
       "name": "paraphrasing-korean",
       "source": "./",
-      "description": "번역투·AI 티·문장 다이어트를 한 문장씩 적용해 뜻은 그대로 두고 군더더기만 덜어 내는 스킬 묶음(명령어 4개).",
+      "description": "번역 문체·AI 문체·문장 다이어트를 한 문장씩 적용해 뜻은 그대로 두고 군더더기만 덜어 내는 스킬 묶음(명령어 4개).",
       "version": "0.3.0",
-      "keywords": ["korean", "proofreading", "윤문", "첨삭", "번역투", "humanize"]
+      "keywords": ["korean", "proofreading", "윤문", "첨삭", "번역 문체", "humanize"]
     }
   ]
 }
