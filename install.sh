@@ -1,73 +1,142 @@
 #!/usr/bin/env bash
-# paraphrasing-korean 멀티 하니스 설치기.
-# agentskills.io 표준 스킬 폴더를 각 하니스의 스킬 디렉토리에 심링크(기본) 또는 복사(--copy)한다.
-#
-# 사용법:
-#   ./install.sh [claude|codex|openclaw|hermes|agents|all] [--copy]
-#
-#   claude    → ~/.claude/skills/
-#   codex     → ~/.agents/skills/   (Codex + OpenClaw 공용 경로)
-#   openclaw  → ~/.agents/skills/
-#   agents    → ~/.agents/skills/   (위 둘과 동일, 명시적 이름)
-#   hermes    → ~/.hermes/skills/writing/
-#   all       → 위 경로 중 부모 디렉토리가 존재하는 곳 모두
-#
-# 심링크 설치는 `git pull` 로 갱신된다. --copy 는 심링크를 따라가(-L) 자족적 폴더로 복사한다.
+# paraphrasing-korean — 여러 AI 도구에 한 번에 설치하는 스크립트.
+# 저장소를 클론한 뒤 `./install.sh` 한 번이면 깔려 있는 도구(claude/codex/openclaw/hermes/gemini)를
+# 스스로 찾아 스킬을 연결한다. 기본은 심링크(저장소를 고치면 바로 반영, `git pull` 로 갱신).
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SKILLS_DIR="$REPO/skills"
-MODE="${1:-all}"
-COPY=0
-for a in "$@"; do [ "$a" = "--copy" ] && COPY=1; done
+SKILLS_SRC="$REPO/skills"
+CLAUDE_HOME="${CLAUDE_HOME:-$HOME/.claude}"
+CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
+OPENCLAW_HOME="${OPENCLAW_HOME:-$HOME/.openclaw}"
+HERMES_HOME="${HERMES_HOME:-$HOME/.hermes}"
+AGENTS_HOME="${AGENTS_HOME:-$HOME/.agents}"   # agentskills.io 공용 경로(Codex·OpenClaw가 함께 읽음)
 
-# 설치할 스킬 폴더(로마자 별칭 -sentence 포함). 심링크 자체도 대상.
-SKILLS=(paraphrasing-korean paraphrasing-korean-센텐스 paraphrasing-korean-trans paraphrasing-korean-ai paraphrasing-korean-sentence)
+MODE=symlink         # symlink | copy
+ONLY=""              # "" | claude | codex | openclaw | hermes | gemini
+DO_GEMINI=auto       # auto | yes | no
+FORCE=0
+DRYRUN=0
+TS="$(date +%Y%m%d-%H%M%S)"
 
-link_one() {  # $1=src dir, $2=dest dir
-  local src="$1" dest="$2"
-  mkdir -p "$dest"
+# 설치할 스킬 폴더(영문 별칭 -sentence 포함).
+SKILLS=(paraphrasing-korean paraphrasing-korean-센텐스 paraphrasing-korean-sentence paraphrasing-korean-trans paraphrasing-korean-ai)
+
+print_help() {
+  cat <<'H'
+사용법: ./install.sh [옵션]
+
+  깔려 있는 AI 도구를 스스로 찾아 paraphrasing-korean 스킬을 설치한다.
+  Claude  : ~/.claude/skills/
+  Codex   : ~/.codex/skills/   + ~/.agents/skills/
+  OpenClaw: ~/.openclaw/skills/ + ~/.agents/skills/
+  Hermes  : ~/.hermes/skills/writing/
+  Gemini  : gemini extensions link (gemini-extension.json + GEMINI.md + commands/)
+
+옵션:
+  --copy           심링크 대신 복사(저장소를 지워도 유지). 복사본은 uninstall.sh가 지우지 않음.
+  --claude-only    Claude 에만 설치
+  --codex-only     Codex 에만 설치
+  --openclaw-only  OpenClaw 에만 설치
+  --hermes-only    Hermes 에만 설치
+  --gemini-only    Gemini 에만 설치
+  --no-gemini      Gemini 는 건너뜀
+  --force          대상에 일반 파일/폴더가 있어도 .bak.<시각> 으로 백업 후 덮어씀
+  --dry-run        실제로 바꾸지 않고 할 일만 출력
+  -h, --help       이 도움말
+
+환경변수: CLAUDE_HOME · CODEX_HOME · OPENCLAW_HOME · HERMES_HOME · AGENTS_HOME 로 경로 덮어쓰기
+H
+}
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --copy) MODE=copy ;;
+    --claude-only) ONLY=claude; DO_GEMINI=no ;;
+    --codex-only) ONLY=codex; DO_GEMINI=no ;;
+    --openclaw-only) ONLY=openclaw; DO_GEMINI=no ;;
+    --hermes-only) ONLY=hermes; DO_GEMINI=no ;;
+    --gemini-only) ONLY=gemini; DO_GEMINI=yes ;;
+    --no-gemini) DO_GEMINI=no ;;
+    --force) FORCE=1 ;;
+    --dry-run) DRYRUN=1 ;;
+    -h|--help) print_help; exit 0 ;;
+    *) echo "모르는 인자: $1" >&2; print_help; exit 2 ;;
+  esac
+  shift
+done
+
+run() { echo "+ $*"; [ "$DRYRUN" = 1 ] || "$@"; }
+
+# 도구가 깔렸는지: PATH 에 있거나, 홈 폴더가 있으면 "있음".
+present() {  # $1=cli명, $2=홈경로
+  command -v "$1" >/dev/null 2>&1 && return 0
+  [ -d "$2" ] && return 0
+  return 1
+}
+want() {  # $1=대상명. ONLY 가 비었으면 전부, 아니면 해당만.
+  [ -z "$ONLY" ] || [ "$ONLY" = "$1" ]
+}
+
+# rc: 0=대상 비었음(진행) / 1=이미 우리 심링크(스킵) / 2=충돌(거부)
+prepare_target() {
+  local dest="$1" src="$2"
+  if [ -L "$dest" ]; then
+    [ "$(readlink "$dest")" = "$src" ] && { echo "그대로 둠(이미 연결): $dest"; return 1; }
+    run mv "$dest" "$dest.bak.$TS"
+  elif [ -e "$dest" ]; then
+    [ "$FORCE" = 1 ] || { echo "거부: $dest 가 이미 있음 (--force 로 백업 후 덮어쓰기 또는 --copy)"; return 2; }
+    run mv "$dest" "$dest.bak.$TS"
+  fi
+  return 0
+}
+
+install_one() {  # $1=src, $2=dest
+  local src="$1" dest="$2" rc=0
+  run mkdir -p "$(dirname "$dest")"
+  prepare_target "$dest" "$src" || rc=$?
+  [ "$rc" = 1 ] && return 0
+  [ "$rc" = 2 ] && return 1
+  case "$MODE" in
+    symlink) run ln -s "$src" "$dest" ;;
+    copy)    run cp -RL "$src" "$dest" ;;
+  esac
+  echo "설치됨: $dest"
+}
+
+install_skills_into() {  # $1=대상 skills 디렉토리
+  local dir="$1"
   for s in "${SKILLS[@]}"; do
-    local from="$src/$s" to="$dest/$s"
-    [ -e "$from" ] || continue
-    rm -rf "$to"
-    if [ "$COPY" -eq 1 ]; then
-      cp -RL "$from" "$to"        # 심링크 따라가 자족 복사
-    else
-      ln -s "$from" "$to"         # 심링크
-    fi
-    echo "  $s → $to"
+    [ -e "$SKILLS_SRC/$s" ] && install_one "$SKILLS_SRC/$s" "$dir/$s"
   done
 }
 
-install_target() {  # $1=label, $2=dest, $3=require_parent(1/0)
-  local label="$1" dest="$2" req="$3"
-  local parent; parent="$(dirname "$dest")"
-  if [ "$req" -eq 1 ] && [ ! -d "$parent" ]; then
-    echo "건너뜀($label): $parent 없음."
-    return
-  fi
-  echo "[$label] → $dest"
-  link_one "$SKILLS_DIR" "$dest"
-}
+DID=0
 
-# ~/.agents/skills 는 agentskills.io 공용 경로(Codex·OpenClaw가 함께 읽음). 일부 하니스는
-# 네이티브 경로(~/.codex/skills, ~/.openclaw/skills)도 읽으므로 둘 다 설치해 호환을 넓힌다.
-case "$MODE" in
-  claude)   install_target claude   "$HOME/.claude/skills"          0 ;;
-  agents)   install_target agents   "$HOME/.agents/skills"          0 ;;
-  codex)    install_target codex    "$HOME/.codex/skills"           0
-            install_target "codex(agents)" "$HOME/.agents/skills"   0 ;;
-  openclaw) install_target openclaw "$HOME/.openclaw/skills"        0
-            install_target "openclaw(agents)" "$HOME/.agents/skills" 0 ;;
-  hermes)   install_target hermes   "$HOME/.hermes/skills/writing"  0 ;;
-  all)
-    install_target claude   "$HOME/.claude/skills"         1
-    install_target agents   "$HOME/.agents/skills"         1
-    install_target codex    "$HOME/.codex/skills"          1
-    install_target openclaw "$HOME/.openclaw/skills"       1
-    install_target hermes   "$HOME/.hermes/skills/writing" 1
-    ;;
-  *) echo "알 수 없는 대상: $MODE (claude|codex|openclaw|hermes|agents|all)"; exit 1 ;;
-esac
-echo "완료. ($([ "$COPY" -eq 1 ] && echo 복사 || echo 심링크))"
+if want claude && present claude "$CLAUDE_HOME"; then
+  echo "== Claude Code =="; install_skills_into "$CLAUDE_HOME/skills"; DID=1
+fi
+if want codex && present codex "$CODEX_HOME"; then
+  echo "== Codex =="; install_skills_into "$CODEX_HOME/skills"; install_skills_into "$AGENTS_HOME/skills"; DID=1
+fi
+if want openclaw && present openclaw "$OPENCLAW_HOME"; then
+  echo "== OpenClaw =="; install_skills_into "$OPENCLAW_HOME/skills"; install_skills_into "$AGENTS_HOME/skills"; DID=1
+fi
+if want hermes && present hermes "$HERMES_HOME"; then
+  echo "== Hermes =="; install_skills_into "$HERMES_HOME/skills/writing"; DID=1
+fi
+if { [ "$ONLY" = gemini ] || { [ -z "$ONLY" ] && [ "$DO_GEMINI" != no ]; }; } && command -v gemini >/dev/null 2>&1; then
+  echo "== Gemini CLI =="
+  if [ "$DRYRUN" = 1 ]; then echo "+ gemini extensions link $REPO (dry-run)"; else
+    echo "Y" | gemini extensions link "$REPO" 2>/dev/null && echo "설치됨: Gemini extension" \
+      || echo "  (이미 등록됨 또는 수동 등록 필요: gemini extensions link $REPO)"
+  fi
+  DID=1
+fi
+
+[ "$DID" = 0 ] && echo "설치한 도구가 없습니다. (도구가 안 깔렸거나 --xxx-only 가 맞지 않음)"
+echo ""
+echo "완료 (방식=$MODE)."
+echo "  새 세션에서 /paraphrasing-korean (또는 \"이 글 문장 다듬어줘\")."
+echo "  업데이트: ./update.sh   ·   제거: ./uninstall.sh"
+exit 0

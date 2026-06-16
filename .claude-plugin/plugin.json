@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
   "name": "paraphrasing-korean",
   "description": "한국어 문장을 문장 단위로 첨삭·윤문하는 스킬 묶음. 번역투·AI 티·문장 다이어트를 한 문장씩 적용해 뜻은 그대로 두고 군더더기만 덜어 낸다. 문장 다이어트 규칙은 책 『내 문장이 그렇게 이상한가요?』에서 영감을 받았다.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": { "name": "Turtle-Hwan" },
   "homepage": "https://github.com/Turtle-Hwan/paraphrasing-korean",
   "repository": "https://github.com/Turtle-Hwan/paraphrasing-korean",

@@ -1,0 +1,20 @@
+{
+  "name": "paraphrasing-korean",
+  "owner": {
+    "name": "Turtle-Hwan"
+  },
+  "metadata": {
+    "description": "한국어 문장을 문장 단위로 첨삭·윤문하는 스킬 묶음 마켓플레이스",
+    "version": "0.2.0",
+    "pluginRoot": "."
+  },
+  "plugins": [
+    {
+      "name": "paraphrasing-korean",
+      "source": "./",
+      "description": "번역투·AI 티·문장 다이어트를 한 문장씩 적용해 뜻은 그대로 두고 군더더기만 덜어 내는 스킬 묶음(명령어 4개).",
+      "version": "0.2.0",
+      "keywords": ["korean", "proofreading", "윤문", "첨삭", "번역투", "humanize"]
+    }
+  ]
+}
