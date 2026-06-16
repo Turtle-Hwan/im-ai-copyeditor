@@ -31,7 +31,7 @@ def load_patterns(path):
         except re.error as e:
             print(f"경고: 패턴 {p.get('id')} 정규식 오류 — {e}", file=sys.stderr)
             continue
-        compiled.append((p.get("id", "?"), p.get("name", ""), rx))
+        compiled.append((p.get("id", "?"), p.get("name", ""), rx, bool(p.get("noisy", False))))
     return compiled
 
 
@@ -51,10 +51,14 @@ def annotate(text: str, patterns) -> tuple[str, int]:
         if cur_kind == "prose" and line.startswith("원문:"):
             sentence = line[len("원문:"):].strip()
             already = (i + 1 < len(lines) and lines[i + 1].startswith("힌트:"))
-            hits = []
-            for pid, _name, rx in patterns:
-                if rx.search(sentence) and pid not in hits:
-                    hits.append(pid)
+            # 드문(=신호가 강한) 힌트를 앞에, 고빈도 noisy 힌트를 뒤에. 매칭 순서는 안정 유지.
+            sharp, noisy = [], []
+            for pid, _name, rx, is_noisy in patterns:
+                if rx.search(sentence):
+                    bucket = noisy if is_noisy else sharp
+                    if pid not in bucket:
+                        bucket.append(pid)
+            hits = sharp + noisy
             if hits and not already:
                 out.append("힌트: " + ", ".join(hits))
                 n_hint += 1
