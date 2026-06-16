@@ -17,7 +17,7 @@
 
 - **문장 교정은 책에서 영감을 받았어요.**
 
-  문장을 교정하는 것은 책 『내 문장이 그렇게 이상한가요?』에서 영감을 받아 더했어요.
+  문장을 교정하는 것은 책 [『내 문장이 그렇게 이상한가요?』](https://product.kyobobook.co.kr/detail/S000001863138)에서 영감을 받아 더했어요.
 
 - **한국어 특화 스킬이에요.**
 
@@ -117,7 +117,7 @@ cd paraphrasing-korean
 - `grammar-rules.md` — 맞춤법. 국립국어원 어문 규범 기준.
 - `translationese-rules.md` — 번역 문체. 한국 번역학 연구를 실용 규칙으로 옮겼어요.
 - `ai-tell-rules.md` — AI 문체. AI 글과 사람 글을 비교한 논문에 근거해요.
-- `sentence-rules.md` — 문장 다이어트. 책 『내 문장이 그렇게 이상한가요?』(저자 김정선, 유유, 2016)에서
+- `sentence-rules.md` — 문장 다이어트. 책 [『내 문장이 그렇게 이상한가요?』](https://product.kyobobook.co.kr/detail/S000001863138)(저자 김정선, 유유, 2016)에서
   영감을 받았어요.
 - `style-guide.md` — 문체·경어법. 국립국어원 기준의 종결문체 일관성과 사물존칭·간접높임.
 - `prime-directives.md` — 모든 명령이 함께 지키는 약속.
