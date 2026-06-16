@@ -18,6 +18,16 @@
     { "id": "T-9c", "name": "-을 필요로 한다", "rulebook": "trans", "regex": "필요로\\s*(한다|하는|했)" },
     { "id": "AI-2", "name": "결말 공식", "rulebook": "ai", "regex": "(시사하는\\s*바가\\s*크|^결국,|본질적으로)" },
     { "id": "AI-3", "name": "hype 어휘", "rulebook": "ai", "regex": "(혁신적|획기적|놀라운|강력한|필수적|중요한\\s*역할)" },
-    { "id": "AI-8", "name": "형식명사 것이다", "rulebook": "ai", "regex": "(라는\\s*것이다|라는\\s*점이다|라는\\s*뜻이다)" }
+    { "id": "AI-8", "name": "형식명사 것이다", "rulebook": "ai", "regex": "(라는\\s*것이다|라는\\s*점이다|라는\\s*뜻이다)" },
+    { "id": "AI-13", "name": "단순한 ~가 아니라", "rulebook": "ai", "regex": "단순한.{0,20}[가이]\\s*아니라" },
+    { "id": "AI-19", "name": "막연한 강조 부사", "rulebook": "ai", "regex": "(매우|굉장히|정말로|너무나|엄청)" },
+    { "id": "AI-20", "name": "접속사 뒤 쉼표", "rulebook": "ai", "regex": "(따라서|그러나|그리고|또한|하지만|게다가|즉),\\s" },
+    { "id": "AI-22", "name": "과한 메타설명", "rulebook": "ai", "regex": "(살펴보겠습니다|설명드리겠습니다|알아보겠습니다|소개하겠습니다)" },
+    { "id": "T-12", "name": "복수 -들", "rulebook": "trans", "regex": "들[이은을에]" },
+    { "id": "T-16", "name": "-로부터", "rulebook": "trans", "regex": "(으)?로부터" },
+    { "id": "T-18", "name": "진행형 ~하는 중", "rulebook": "trans", "regex": "는\\s*중(이다|입니다|이었|인)" },
+    { "id": "T-19", "name": "완료 ~해 왔다", "rulebook": "trans", "regex": "[아어여해]\\s*왔(다|습니다|던|어)" },
+    { "id": "T-27", "name": "부정관사 하나의", "rulebook": "trans", "regex": "하나의\\s" },
+    { "id": "T-29", "name": "~에 있어", "rulebook": "trans", "regex": "에\\s*있어" }
   ]
 }
