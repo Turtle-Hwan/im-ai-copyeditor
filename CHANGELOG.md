@@ -19,7 +19,7 @@
 설치를 쉽게 하고 규칙을 더했습니다.
 
 - **한 줄 설치**: Claude Code 마켓플레이스 설정을 넣었습니다. `/plugin marketplace add` 한 번이면 됩니다.
-- **설치 스크립트 강화**: 깔려 있는 도구를 스스로 찾고, 충돌 시 백업하고, `--dry-run`·`--copy` 를 지원합니다.
+- **설치 스크립트 강화**: 설치돼 있는 도구를 스스로 찾고, 충돌 시 백업하고, `--dry-run`·`--copy` 를 지원합니다.
   `update.sh` 와 `uninstall.sh` 도 넣었습니다.
 - **Gemini CLI 지원**: `gemini-extension.json` 과 `GEMINI.md`, 그리고 `commands/` 를 넣었습니다.
 - **새 규칙**: 번역 문체 T-10~T-30, AI 문체 AI-10~AI-26 을 더했습니다. 괄호 줄이기 S-15 와 쉼표 줄이기 S-16 도

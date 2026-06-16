@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # paraphrasing-korean — 여러 AI 도구에 한 번에 설치하는 스크립트.
-# 저장소를 클론한 뒤 `./install.sh` 한 번이면 깔려 있는 도구(claude/codex/openclaw/hermes/gemini)를
+# 저장소를 클론한 뒤 `./install.sh` 한 번이면 설치돼 있는 도구(claude/codex/openclaw/hermes/gemini)를
 # 스스로 찾아 스킬을 연결한다. 기본은 심링크(저장소를 고치면 바로 반영, `git pull` 로 갱신).
 set -euo pipefail
 
@@ -26,7 +26,7 @@ print_help() {
   cat <<'H'
 사용법: ./install.sh [옵션]
 
-  깔려 있는 AI 도구를 스스로 찾아 paraphrasing-korean 스킬을 설치한다.
+  설치돼 있는 AI 도구를 스스로 찾아 paraphrasing-korean 스킬을 설치한다.
   Claude  : ~/.claude/skills/
   Codex   : ~/.codex/skills/   + ~/.agents/skills/
   OpenClaw: ~/.openclaw/skills/ + ~/.agents/skills/
@@ -68,7 +68,7 @@ done
 
 run() { echo "+ $*"; [ "$DRYRUN" = 1 ] || "$@"; }
 
-# 도구가 깔렸는지: PATH 에 있거나, 홈 폴더가 있으면 "있음".
+# 도구가 설치됐는지: PATH 에 있거나, 홈 폴더가 있으면 "있음".
 present() {  # $1=cli명, $2=홈경로
   command -v "$1" >/dev/null 2>&1 && return 0
   [ -d "$2" ] && return 0
@@ -134,7 +134,7 @@ if { [ "$ONLY" = gemini ] || { [ -z "$ONLY" ] && [ "$DO_GEMINI" != no ]; }; } &&
   DID=1
 fi
 
-[ "$DID" = 0 ] && echo "설치한 도구가 없습니다. (도구가 안 깔렸거나 --xxx-only 가 맞지 않음)"
+[ "$DID" = 0 ] && echo "설치한 도구가 없습니다. (도구가 안 설치됐거나 --xxx-only 가 맞지 않음)"
 echo ""
 echo "완료 (방식=$MODE)."
 echo "  새 세션에서 /paraphrasing-korean (또는 \"이 글 문장 다듬어줘\")."

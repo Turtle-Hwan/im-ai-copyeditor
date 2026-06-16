@@ -83,11 +83,11 @@
 ```bash
 git clone https://github.com/Turtle-Hwan/paraphrasing-korean
 cd paraphrasing-korean
-./install.sh            # 깔려 있는 도구를 스스로 찾아 설치
+./install.sh            # 설치돼 있는 도구를 스스로 찾아 설치
 ```
 
-`./install.sh` 는 기본으로 심링크를 걸어요. `git pull` 만 하면 최신으로 갱신돼요. 복사로 깔려면
-`--copy` 를 붙여요. 특정 도구만 깔려면 `--claude-only` 처럼 써요.
+`./install.sh` 는 기본으로 심링크를 걸어요. `git pull` 만 하면 최신으로 갱신돼요. 복사로 설치하려면
+`--copy` 를 붙여요. 특정 도구만 설치하려면 `--claude-only` 처럼 써요.
 
 ```bash
 ./update.sh             # 새 버전 확인하고 적용
@@ -135,9 +135,12 @@ cd paraphrasing-korean
 python3 -m unittest discover -s tests
 ```
 
-따로 깔 것 없이 파이썬 표준 기능만 써요.
+따로 설치할 것 없이 파이썬 표준 기능만 써요.
 
 ## 라이선스
 
-MIT. 다만 책 규칙의 저작권은 원저작자에게 있어요. 이 저장소는 그 책에서 영감을 받아 도구로 옮긴
-것이에요. 책 내용을 그대로 옮겨 싣지는 않았어요.
+[MIT](LICENSE)
+
+책 규칙의 저작권은 원저작자에게 있어요.
+
+이 저장소는 그 책에서 영감을 받아 도구로 옮긴 것이에요. 책 내용을 그대로 옮겨 싣지는 않았어요.

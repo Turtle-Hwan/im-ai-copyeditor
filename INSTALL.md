@@ -9,7 +9,7 @@ git clone https://github.com/Turtle-Hwan/paraphrasing-korean
 cd paraphrasing-korean
 ```
 
-`./install.sh` 는 깔려 있는 도구를 스스로 찾아 설치합니다. 기본은 심링크입니다. `git pull` 만 하면
+`./install.sh` 는 설치돼 있는 도구를 스스로 찾아 설치합니다. 기본은 심링크입니다. `git pull` 만 하면
 최신으로 갱신됩니다. 저장소를 지워도 유지하려면 `--copy` 를 붙입니다.
 
 ## Claude Code
@@ -62,7 +62,7 @@ gemini extensions link "$(pwd)"
 ## 한 번에 모두
 
 ```bash
-./install.sh                      # 깔려 있는 도구 전부
+./install.sh                      # 설치돼 있는 도구 전부
 ./install.sh --copy               # 심링크 대신 복사
 ./install.sh --dry-run            # 실제로 바꾸지 않고 할 일만 출력
 ```
