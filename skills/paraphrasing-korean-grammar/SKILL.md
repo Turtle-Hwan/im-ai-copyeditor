@@ -15,9 +15,9 @@ description: 한국어 맞춤법과 문체를 문장 단위로 교정한다. 예
 **Phase 0** — 상태 한 줄: `paraphrasing-korean-grammar 맞춤법·문체 / run_id: {YYYY-MM-DD-NNN}`
 **Phase 1** — 입력을 `_workspace/{run_id}/01_input.txt` 저장.
 **Phase 2** — `python3 $SKILL/scripts/segment.py _workspace/{run_id}/01_input.txt --outdir _workspace/{run_id}` → segments.json + worksheet.md, 문장 수 N 확인.
-**Phase 2.5 선택** — `python3 $SKILL/scripts/scan.py _workspace/{run_id}/worksheet.md` → 고정밀 맞춤법·표기 오타(예요/에요·됬·역활·-ㄹ께 등)를 `힌트:` 로 표시. 참고용이고 틀릴 수 있어요. 맞춤법 교정이라 이 힌트가 잘 맞아요.
-**Phase 3** — 룰북 로드: `$SKILL/references/grammar-rules.md` 와 `$SKILL/references/style-guide.md`, 공통 `$SKILL/references/prime-directives.md`. 먼저 글 전체의 우세 문체(해요체/합니다체/한다체)를 정해요.
-**Phase 4** — worksheet.md 의 문장 칸을 위에서 아래로 읽으며 맞춤법(G-)을 먼저 바로잡고 문체(ST-)를 맞춰 **윤문/규칙** 채움. 고칠 게 없으면 원문 그대로 + `변경없음`. 문장 합치기·나누기·순서 바꾸기 금지, '그대로 둘 줄' 불가침, 건드리지 않는 것 보존.
+**Phase 2.5 선택** — `python3 $SKILL/scripts/scan.py _workspace/{run_id}/worksheet.md` → 고정밀 맞춤법·표기 오타를 `힌트:` 로 표시. 예요/에요·됬·역활·-ㄹ께 같은 고정 오류예요. 참고용이고 틀릴 수 있어요. 맞춤법 교정이라 이 힌트가 잘 맞아요.
+**Phase 3** — 룰북 로드: `$SKILL/references/grammar-rules.md` 와 `$SKILL/references/style-guide.md`, 공통 `$SKILL/references/prime-directives.md`. 먼저 글 전체의 우세 문체를 정해요. 해요체·합니다체·한다체 중 하나로.
+**Phase 4** — worksheet.md 의 문장 칸을 위에서 아래로 읽으며 맞춤법 규칙 G-를 먼저 바로잡고 문체 규칙 ST-를 맞춰 **윤문/규칙** 채움. 고칠 게 없으면 원문 그대로 + `변경없음`. 문장 합치기·나누기·순서 바꾸기 금지, '그대로 둘 줄' 불가침, 건드리지 않는 것 보존.
 **Phase 5** — `python3 $SKILL/scripts/reassemble.py _workspace/{run_id}/segments.json _workspace/{run_id}/worksheet.md --out _workspace/{run_id}/final.md`. 문장 수 불일치는 2, 과윤문은 3으로 멈춰요.
 **Phase 6** — 반환: 상태 한 줄 / 바뀐 문장 전·후 표 / final.md / 자체검증 6가지.
 
