@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """segment.py — 한국어 글을 문장 부호 단위로 잘라 윤문 작업표를 만든다.
 
-문장 단위 다듬기의 1단계다. 정규식으로 한꺼번에 바꾸지 않는다. 문장 단위로 잘라
-에이전트가 한 문장씩 읽고 다듬게 한다. 파이썬 표준 기능만 쓴다.
+문장 단위 다듬기의 1단계다. 정규식으로 한꺼번에 바꾸지 않는다. 문장 부호로 자르되,
+종결부호가 없는 줄바꿈 글은 줄 단위로 쪼개 한 줄을 한 문장으로 본다. 약어(A.I.·e.g.)나
+숫자(1980.)의 마침표는 문장 끝으로 오인하지 않는다. 에이전트가 한 문장씩 읽고 다듬게 한다.
+파이썬 표준 기능만 쓴다.
 
 산출물:
   - segments.json : 원본 구조 정보. 되붙일 때 기준이 되니 고치지 않는다.
@@ -28,7 +30,7 @@ STRUCTURE_RE = re.compile(
     r"""^\s*(
         \#{1,6}\s        |   # 헤딩
         [-*+]\s          |   # 불릿
-        \d+[.)]\s        |   # 번호 목록
+        \d{1,2}[.)]\s    |   # 번호 목록(1~2자리만 — '1980.' 같은 연도 오인 방지)
         >\s?             |   # 인용
         \|               |   # 표
         (-{3,}|\*{3,}|_{3,})\s*$  |  # 수평선
@@ -41,6 +43,38 @@ FENCE_RE = re.compile(r"^\s*(```|~~~)")
 
 # 문장 종결: . ? ! … 。 (닫는 따옴표/괄호가 뒤따를 수 있음) + 뒤에 공백/끝.
 SENT_END_RE = re.compile(r'([.?!…。]+["\'”’」』)\]]*)(\s+|$)', re.UNICODE)
+
+# 약어의 마침표는 문장 끝이 아니다 — 단일 '.' 매치일 때만 검사해 분절을 건너뛴다.
+#   이니셜리즘: A.I.  U.S.A.  e.g.  i.e.  Ph.D.  (한두 글자+마침표가 둘 이상 '연달아')
+ABBREV_RUN_RE = re.compile(r"(?:[A-Za-z]{1,2}\.){2,}$")
+#   단일 토큰 약어(끝 마침표 하나): vs. etc. cf. Dr. No. Fig. et al. …
+ABBREV_WORD_RE = re.compile(
+    r"(?:^|[\s(\"'\[])(vs|etc|cf|al|et|Dr|Mr|Mrs|Ms|St|No|Fig|Vol|pp|eq)\.$",
+    re.IGNORECASE,
+)
+
+
+def _is_abbrev_dot(upto: str) -> bool:
+    """'upto'(이번 종결 직전까지의 본문, 끝이 '.')가 약어 마침표면 True."""
+    return bool(ABBREV_RUN_RE.search(upto) or ABBREV_WORD_RE.search(upto))
+
+
+def _split_lines(prefix: str, core: str, trail: str):
+    """종결부호 없이 줄바꿈으로 나뉜 core 를 줄 단위 세그먼트로 쪼갠다(무손실).
+
+    각 물리 줄이 한 문장이 된다(문장 단위 의도). 마지막 줄 뒤에 원래 꼬리 공백을 복원한다.
+    """
+    pieces = core.splitlines(keepends=True)
+    out = []
+    for i, piece in enumerate(pieces):
+        if piece.endswith("\n"):
+            c, suf = piece[:-1], "\n"
+        else:
+            c, suf = piece, ""
+        if i == len(pieces) - 1:
+            suf += trail
+        out.append((prefix if i == 0 else "", c, suf))
+    return out
 
 
 def split_sentences(block: str):
@@ -63,6 +97,13 @@ def split_sentences(block: str):
 
     last = pos
     for m in SENT_END_RE.finditer(block, pos):
+        # 단일 '.' 가 약어(A.I.·e.g.·etc.)나 숫자(1980.·3.14.) 뒤면 문장 끝이 아니다 —
+        # 건너뛰어 다음 종결까지 이어 붙인다(과대분절 방지; 한국어 문장은 거의 '다/요'로 끝남).
+        if m.group(1) == "." and (
+            block[m.start(1) - 1: m.start(1)].isdigit()
+            or _is_abbrev_dot(block[last:m.start(2)])
+        ):
+            continue
         core = block[last:m.start(1)] + m.group(1)
         suffix = m.group(2)
         out.append((pending_prefix, core, suffix))
@@ -74,7 +115,10 @@ def split_sentences(block: str):
         m2 = re.search(r"\s*$", tail)
         trail = m2.group(0) if m2 else ""
         core = tail[: len(tail) - len(trail)]
-        if core:
+        if core and "\n" in core:
+            # 무종결 + 줄바꿈: 한 덩어리로 두지 않고 줄 단위로 쪼갠다(문장 단위 의도).
+            out.extend(_split_lines(pending_prefix, core, trail))
+        elif core:
             out.append((pending_prefix, core, trail))
         elif out:
             # 꼬리가 공백뿐이면 직전 문장 suffix 에 붙인다.
@@ -154,7 +198,10 @@ def build_worksheet(segments) -> str:
             lines.append("")
         else:
             lines.append(f"<!-- SEG {s['idx']} prose -->")
-            lines.append(f"원문: {s['core']}")
+            # 소프트랩으로 core 안에 줄바꿈이 있어도 표시는 한 줄로 접는다(scan.py 가 문장 전체를 보게).
+            # 실제 재조립은 segments.json 의 core 를 쓰므로 표시 접기는 무손실에 영향 없음.
+            shown_core = re.sub(r"\s*\n\s*", " ", s["core"])
+            lines.append(f"원문: {shown_core}")
             lines.append("윤문: ")
             lines.append("규칙: ")
             lines.append("")
