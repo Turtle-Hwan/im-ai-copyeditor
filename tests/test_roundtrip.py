@@ -26,6 +26,14 @@ SAMPLES = [
     "```\n코드 블록은 그대로 통과한다.\n여기 마침표. 도 건드리지 않는다.\n```\n바깥 문장.\n",
     "",
     "공백만   있는   줄\n\n   \n다음.\n",
+    # 무종결 + 줄바꿈(줄 단위 분절 경로).
+    "오늘 날씨 좋다\n내일은 비\n모레는 맑음",
+    # 약어(연달아 마침표) — 한 문장 유지.
+    "A.I. 기술은 좋다. U.S.A. 시장도 크다. 예를 들어 e.g. 같은 표현.\n",
+    # 숫자+마침표 — 문장 끝으로 오인하지 않음.
+    "1980. 그해 여름은 더웠다. 끝.\n",
+    # 소프트랩 멀티라인 문장(워크시트 한 줄화 경로).
+    "이것은 긴 문장인데\n줄바꿈으로 나뉘어 있다. 둘째 문장.\n",
 ]
 
 
@@ -60,6 +68,40 @@ class TestRoundtrip(unittest.TestCase):
         segments = seg.segment(text)
         n_prose = sum(1 for s in segments if s["kind"] == "prose")
         self.assertEqual(n_prose, 3)
+
+    def _n_prose(self, text):
+        return sum(1 for s in seg.segment(text) if s["kind"] == "prose")
+
+    def test_no_terminal_punct_splits_by_line(self):
+        """마침표 없는 줄바꿈 글은 줄(=문장) 단위로 쪼갠다 — 한 덩어리로 두지 않는다."""
+        self.assertEqual(self._n_prose("오늘 날씨 좋다\n내일은 비\n모레는 맑음"), 3)
+
+    def test_abbreviation_not_oversplit(self):
+        """약어의 마침표가 연달아 와도 문장이 쪼개지지 않는다(A.I.·U.S.A.·e.g.)."""
+        text = "A.I. 기술은 좋다. U.S.A. 시장도 크다. 예를 들어 e.g. 같은 표현.\n"
+        cores = [s["core"] for s in seg.segment(text) if s["kind"] == "prose"]
+        self.assertEqual(len(cores), 3, cores)
+        self.assertTrue(cores[0].startswith("A.I.") and cores[0].endswith("좋다."))
+
+    def test_number_dot_not_oversplit(self):
+        """숫자+마침표(연도 등)는 문장 끝으로 오인하지 않는다 — 다음 문장과 붙여 둔다."""
+        cores = [s["core"] for s in seg.segment("1980. 그해 여름은 더웠다. 끝.\n")
+                 if s["kind"] == "prose"]
+        self.assertEqual(cores, ["1980. 그해 여름은 더웠다.", "끝."])
+
+    def test_year_line_is_prose_not_structure(self):
+        """3자리 이상 숫자로 시작하는 줄은 번호목록(structure)으로 오판하지 않는다."""
+        kinds = [s["kind"] for s in seg.segment("1980. 그해 여름은 더웠다.\n")]
+        self.assertNotIn("structure", kinds)
+
+    def test_softwrapped_core_shows_one_line(self):
+        """소프트랩으로 core 에 줄바꿈이 있어도 워크시트 원문은 한 물리 줄로 접힌다."""
+        text = "이것은 긴 문장인데\n줄바꿈으로 나뉘어 있다. 둘째 문장.\n"
+        ws = seg.build_worksheet(seg.segment(text))
+        won = [ln for ln in ws.splitlines() if ln.startswith("원문:")]
+        self.assertEqual(won[0], "원문: 이것은 긴 문장인데 줄바꿈으로 나뉘어 있다.")
+        # 접힌 원문 줄에는 줄바꿈이 없어야 한다(scan.py 가 문장 전체를 보게).
+        self.assertNotIn("\n", won[0])
 
     def test_count_mismatch_hard_fails(self):
         text = "문장 하나. 문장 둘.\n"
