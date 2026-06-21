@@ -1,9 +1,9 @@
 ---
-name: paraphrasing-korean-grammar
-description: 한국어 맞춤법과 문체를 문장 단위로 교정한다. 예요/이에요, 되/돼, 안/않, 데/대, 든/던, 로서/로써, 율/률, 띄어쓰기 같은 맞춤법과, 종결문체 일관성·사물존칭·경어법 같은 문체를 국립국어원 기준으로 바로잡는다. 뜻은 한 글자도 바꾸지 않는다. 트리거 — "맞춤법 고쳐", "맞춤법 검사", "문체 통일", "존댓말 통일", "한국어 교정". 번역 문체까지: -trans / AI 문체까지: -ai / 전부: paraphrasing-korean.
+name: im-ai-copyeditor-grammar
+description: 한국어 맞춤법과 문체를 문장 단위로 교정한다. 예요/이에요, 되/돼, 안/않, 데/대, 든/던, 로서/로써, 율/률, 띄어쓰기 같은 맞춤법과, 종결문체 일관성·사물존칭·경어법 같은 문체를 국립국어원 기준으로 바로잡는다. 뜻은 한 글자도 바꾸지 않는다. 트리거 — "맞춤법 고쳐", "맞춤법 검사", "문체 통일", "존댓말 통일", "한국어 교정". 번역 문체까지: -trans / AI 문체까지: -ai / 전부: im-ai-copyeditor.
 ---
 
-# paraphrasing-korean-grammar — 맞춤법·문체 교정
+# im-ai-copyeditor-grammar — 맞춤법·문체 교정
 
 한국어 맞춤법과 문체를 문장 단위로 바로잡아요. 국립국어원 기준을 따라요. 정규식으로 한꺼번에
 바꾸지 않아요. 뜻·수치·고유명사·인용은 그대로 둬요.
@@ -12,7 +12,7 @@ description: 한국어 맞춤법과 문체를 문장 단위로 교정한다. 예
 
 ## 절차
 
-**Phase 0** — 상태 한 줄: `paraphrasing-korean-grammar 맞춤법·문체 / run_id: {YYYY-MM-DD-NNN}`
+**Phase 0** — 상태 한 줄: `im-ai-copyeditor-grammar 맞춤법·문체 / run_id: {YYYY-MM-DD-NNN}`
 **Phase 1** — 입력을 `_workspace/{run_id}/01_input.txt` 저장.
 **Phase 2** — `python3 $SKILL/scripts/segment.py _workspace/{run_id}/01_input.txt --outdir _workspace/{run_id}` → segments.json + worksheet.md, 문장 수 N 확인.
 **Phase 2.5 선택** — `python3 $SKILL/scripts/scan.py _workspace/{run_id}/worksheet.md` → 고정밀 맞춤법·표기 오타를 `힌트:` 로 표시. 예요/에요·됬·역활·-ㄹ께 같은 고정 오류예요. 참고용이고 틀릴 수 있어요. 맞춤법 교정이라 이 힌트가 잘 맞아요.

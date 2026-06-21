@@ -1,4 +1,4 @@
-# paraphrasing-korean — Gemini CLI
+# im-ai-copyeditor — Gemini CLI
 
 한국어 글을 **뜻은 한 글자도 바꾸지 않고** 문장만 다듬는 도구입니다. 글을 통째로 고치지 말고
 문장 하나하나를 따로 읽고 군더더기만 덜어 냅니다.
@@ -51,5 +51,5 @@
 
 ## 통합과 세부
 
-`/paraphrasing-korean` 은 위를 맞춤법 → 번역 문체 → AI 문체 → 문장 다이어트 → 문체 순서로 한 문장씩 다 적용합니다.
+`/im-ai-copyeditor:all` 은 위를 맞춤법 → 번역 문체 → AI 문체 → 문장 다이어트 → 문체 순서로 한 문장씩 다 적용합니다.
 하나만 원하면 `-grammar` · `-sentence` · `-trans` · `-ai` 를 씁니다.

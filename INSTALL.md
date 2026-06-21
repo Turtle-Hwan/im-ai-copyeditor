@@ -5,8 +5,8 @@
 먼저 저장소를 받습니다.
 
 ```bash
-git clone https://github.com/Turtle-Hwan/paraphrasing-korean
-cd paraphrasing-korean
+git clone https://github.com/Turtle-Hwan/im-ai-copyeditor
+cd im-ai-copyeditor
 ```
 
 `./install.sh` 는 설치돼 있는 도구를 스스로 찾아 설치합니다. 기본은 심링크입니다. `git pull` 만 하면
@@ -17,8 +17,8 @@ cd paraphrasing-korean
 한 줄 설치를 권합니다. 클론하지 않아도 됩니다.
 
 ```
-/plugin marketplace add Turtle-Hwan/paraphrasing-korean
-/plugin install paraphrasing-korean@paraphrasing-korean
+/plugin marketplace add Turtle-Hwan/im-ai-copyeditor
+/plugin install im-ai-copyeditor@im-ai-copyeditor
 ```
 
 클론해서 설치하려면 이렇게 합니다.
@@ -27,7 +27,7 @@ cd paraphrasing-korean
 ./install.sh --claude-only        # → ~/.claude/skills/
 ```
 
-새 세션에서 `/paraphrasing-korean` 으로 부릅니다.
+새 세션에서 `/im-ai-copyeditor:all` 으로 부릅니다.
 
 ## Codex
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# paraphrasing-korean — 설치 제거.
+# im-ai-copyeditor — 설치 제거.
 # install.sh 가 만든 "이 저장소를 가리키는 심링크"만 지운다. 사용자가 직접 둔 파일,
 # 다른 곳을 가리키는 링크, .bak.* 백업, --copy 로 복사한 것은 건드리지 않는다.
 set -euo pipefail
@@ -20,7 +20,7 @@ case "${1:-}" in
   *) echo "모르는 인자: $1" >&2; exit 2 ;;
 esac
 
-SKILLS=(paraphrasing-korean paraphrasing-korean-sentence paraphrasing-korean-trans paraphrasing-korean-ai paraphrasing-korean-grammar)
+SKILLS=(im-ai-copyeditor im-ai-copyeditor-sentence im-ai-copyeditor-trans im-ai-copyeditor-ai im-ai-copyeditor-grammar)
 
 remove_if_ours() {  # $1=dest, $2=src
   local dest="$1" src="$2"
@@ -43,8 +43,8 @@ remove_from "$AGENTS_HOME/skills"
 
 if command -v gemini >/dev/null 2>&1; then
   echo "Gemini extension 제거 시도..."
-  if [ "$DRYRUN" = 1 ]; then echo "+ gemini extensions uninstall paraphrasing-korean (dry-run)"; else
-    gemini extensions uninstall paraphrasing-korean 2>/dev/null && echo "제거됨: Gemini extension" \
+  if [ "$DRYRUN" = 1 ]; then echo "+ gemini extensions uninstall im-ai-copyeditor (dry-run)"; else
+    gemini extensions uninstall im-ai-copyeditor 2>/dev/null && echo "제거됨: Gemini extension" \
       || echo "  (Gemini extension 미설치 또는 이미 제거됨)"
   fi
 fi

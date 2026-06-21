@@ -1,4 +1,6 @@
-# paraphrasing-korean — 한국어 문장 다듬기
+# im-ai-copyeditor
+
+> **AI copyeditor for Korean.** AI가 쓴 한국어를 사람이 쓴 듯, 한 문장씩 교정·교열해요.
 
 한국어 글을 다듬는 도구예요. **뜻은 한 글자도 바꾸지 않아요.** 군더더기와 어색함만 덜어 내요.
 
@@ -59,11 +61,11 @@
 
 | 명령어 | 하는 일 |
 |---|---|
-| `/paraphrasing-korean` | **통합**. 맞춤법 → 번역 문체 → AI 문체 → 문장 다이어트 → 문체를 한 문장씩 차례로 적용 |
-| `/paraphrasing-korean-grammar` | 맞춤법·문체 교정. 예요/되/안, 띄어쓰기, 종결문체 통일, 사물존칭 |
-| `/paraphrasing-korean-sentence` | 문장 다이어트. 적·의·것·들, 군더더기 "있다", 군더더기 피동, 조사 다듬기 |
-| `/paraphrasing-korean-trans` | 번역 문체 빼기. 피동→능동, 가지다·통해·대해, 무생물 주어, 대명사 남용 |
-| `/paraphrasing-korean-ai` | AI 문체 빼기. 첫째·둘째 나열, 결말 공식, 과장 어휘, 괄호·쉼표, 클리셰 |
+| `/im-ai-copyeditor:all` | **통합**. 맞춤법 → 번역 문체 → AI 문체 → 문장 다이어트 → 문체를 한 문장씩 차례로 적용 |
+| `/im-ai-copyeditor:grammar` | 맞춤법·문체 교정. 예요/되/안, 띄어쓰기, 종결문체 통일, 사물존칭 |
+| `/im-ai-copyeditor:sentence` | 문장 다이어트. 적·의·것·들, 군더더기 "있다", 군더더기 피동, 조사 다듬기 |
+| `/im-ai-copyeditor:trans` | 번역 문체 빼기. 피동→능동, 가지다·통해·대해, 무생물 주어, 대명사 남용 |
+| `/im-ai-copyeditor:ai` | AI 문체 빼기. 첫째·둘째 나열, 결말 공식, 과장 어휘, 괄호·쉼표, 클리셰 |
 
 설치하면 명령어로 불러요. 그냥 "이 글 문장 다듬어줘" 처럼 말해도 알아서 골라 줘요.
 
@@ -74,15 +76,15 @@
 **Claude Code — 한 줄 설치**
 
 ```
-/plugin marketplace add Turtle-Hwan/paraphrasing-korean
-/plugin install paraphrasing-korean@paraphrasing-korean
+/plugin marketplace add Turtle-Hwan/im-ai-copyeditor
+/plugin install im-ai-copyeditor@im-ai-copyeditor
 ```
 
 **클론 + 스크립트 — 모든 도구**
 
 ```bash
-git clone https://github.com/Turtle-Hwan/paraphrasing-korean
-cd paraphrasing-korean
+git clone https://github.com/Turtle-Hwan/im-ai-copyeditor
+cd im-ai-copyeditor
 ./install.sh            # 설치돼 있는 도구를 스스로 찾아 설치
 ```
 

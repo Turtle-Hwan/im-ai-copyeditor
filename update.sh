@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# paraphrasing-korean — 업데이트 확인 + 적용.
+# im-ai-copyeditor — 업데이트 확인 + 적용.
 # 원격(git)을 확인해 새 커밋이 있으면 fast-forward 로 받고 install.sh 를 다시 돌린다.
 # 심링크 설치는 pull 만으로도 반영되지만, 새 스킬·구조 변경까지 확실히 연결하려고 다시 설치한다.
 #

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# paraphrasing-korean — 여러 AI 도구에 한 번에 설치하는 스크립트.
+# im-ai-copyeditor — 여러 AI 도구에 한 번에 설치하는 스크립트.
 # 저장소를 클론한 뒤 `./install.sh` 한 번이면 설치돼 있는 도구(claude/codex/openclaw/hermes/gemini)를
 # 스스로 찾아 스킬을 연결한다. 기본은 심링크(저장소를 고치면 바로 반영, `git pull` 로 갱신).
 set -euo pipefail
@@ -20,13 +20,13 @@ DRYRUN=0
 TS="$(date +%Y%m%d-%H%M%S)"
 
 # 설치할 스킬 폴더(영문 별칭 -sentence 포함).
-SKILLS=(paraphrasing-korean paraphrasing-korean-sentence paraphrasing-korean-trans paraphrasing-korean-ai paraphrasing-korean-grammar)
+SKILLS=(im-ai-copyeditor im-ai-copyeditor-sentence im-ai-copyeditor-trans im-ai-copyeditor-ai im-ai-copyeditor-grammar)
 
 print_help() {
   cat <<'H'
 사용법: ./install.sh [옵션]
 
-  설치돼 있는 AI 도구를 스스로 찾아 paraphrasing-korean 스킬을 설치한다.
+  설치돼 있는 AI 도구를 스스로 찾아 im-ai-copyeditor 스킬을 설치한다.
   Claude  : ~/.claude/skills/
   Codex   : ~/.codex/skills/   + ~/.agents/skills/
   OpenClaw: ~/.openclaw/skills/ + ~/.agents/skills/
@@ -137,6 +137,6 @@ fi
 [ "$DID" = 0 ] && echo "설치한 도구가 없습니다. (도구가 안 설치됐거나 --xxx-only 가 맞지 않음)"
 echo ""
 echo "완료 (방식=$MODE)."
-echo "  새 세션에서 /paraphrasing-korean (또는 \"이 글 문장 다듬어줘\")."
+echo "  새 세션에서 /im-ai-copyeditor:all (또는 \"이 글 문장 다듬어줘\")."
 echo "  업데이트: ./update.sh   ·   제거: ./uninstall.sh"
 exit 0

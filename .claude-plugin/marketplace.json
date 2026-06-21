@@ -1,18 +1,18 @@
 {
-  "name": "paraphrasing-korean",
+  "name": "im-ai-copyeditor",
   "owner": {
     "name": "Turtle-Hwan"
   },
   "metadata": {
-    "description": "한국어 문장을 문장 단위로 첨삭·윤문하는 스킬 묶음 마켓플레이스",
+    "description": "AI가 쓴 한국어를 사람 글로 교정·교열하는 스킬 마켓플레이스",
     "version": "0.3.0",
     "pluginRoot": "."
   },
   "plugins": [
     {
-      "name": "paraphrasing-korean",
+      "name": "im-ai-copyeditor",
       "source": "./",
-      "description": "번역 문체·AI 문체·문장 다이어트를 한 문장씩 적용해 뜻은 그대로 두고 군더더기만 덜어 내는 스킬 묶음(명령어 4개).",
+      "description": "AI가 쓴 한국어를 한 문장씩 교정·교열하는 스킬. 맞춤법·번역 문체·AI 문체·문장 다이어트·문체를 차례로 적용해 뜻은 그대로 두고 다듬는다(통합 + 세부 4종).",
       "version": "0.3.0",
       "keywords": ["korean", "proofreading", "윤문", "첨삭", "번역 문체", "humanize"]
     }
