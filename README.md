@@ -1,4 +1,6 @@
-# im-ai-copyeditor — 한국어 문장 다듬기
+# im-ai-copyeditor
+
+> **AI copyeditor for Korean.** AI가 쓴 한국어를 사람이 쓴 듯, 한 문장씩 교정·교열해요.
 
 한국어 글을 다듬는 도구예요. **뜻은 한 글자도 바꾸지 않아요.** 군더더기와 어색함만 덜어 내요.
 

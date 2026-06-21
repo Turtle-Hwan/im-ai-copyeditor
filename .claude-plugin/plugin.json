@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
   "name": "im-ai-copyeditor",
-  "description": "한국어 문장을 문장 단위로 첨삭·윤문하는 스킬 묶음. 번역 문체·AI 문체·문장 다이어트를 한 문장씩 적용해 뜻은 그대로 두고 군더더기만 덜어 낸다. 문장 다이어트 규칙은 책 『내 문장이 그렇게 이상한가요?』에서 영감을 받았다.",
+  "description": "AI가 쓴 한국어를 사람이 쓴 듯 한 문장씩 교정·교열하는 스킬. 맞춤법·번역 문체·AI 문체·문장 다이어트를 차례로 적용해 뜻은 그대로 두고 다듬는다. 문장 다이어트 규칙은 책 『내 문장이 그렇게 이상한가요?』에서 영감을 받았다.",
   "version": "0.3.0",
   "author": { "name": "Turtle-Hwan" },
   "homepage": "https://github.com/Turtle-Hwan/im-ai-copyeditor",
