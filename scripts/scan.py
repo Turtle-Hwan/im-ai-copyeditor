@@ -56,10 +56,8 @@ def annotate(text: str, patterns) -> tuple[str, int]:
         if cur_kind == "prose" and line.startswith("원문:"):
             sentence = line[len("원문:"):].strip()
             already = (i + 1 < len(lines) and lines[i + 1].startswith("힌트:"))
-            hits = []
-            for pid, _name, rx in patterns:
-                if rx.search(sentence) and pid not in hits:
-                    hits.append(pid)
+            # 한 패턴 id 가 여러 번 매치해도 힌트는 한 번만 — 등장 순서를 지키며 중복 제거.
+            hits = list(dict.fromkeys(pid for pid, _name, rx in patterns if rx.search(sentence)))
             if hits and not already:
                 out.append("힌트: " + ", ".join(hits))
                 n_hint += 1

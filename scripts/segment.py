@@ -42,7 +42,7 @@ STRUCTURE_RE = re.compile(
 FENCE_RE = re.compile(r"^\s*(```|~~~)")
 
 # 문장 종결: . ? ! … 。 (닫는 따옴표/괄호가 뒤따를 수 있음) + 뒤에 공백/끝.
-SENT_END_RE = re.compile(r'([.?!…。]+["\'”’」』)\]]*)(\s+|$)', re.UNICODE)
+SENT_END_RE = re.compile(r'([.?!…。]+["\'”’」』)\]]*)(\s+|$)')
 
 # 약어의 마침표는 문장 끝이 아니다 — 단일 '.' 매치일 때만 검사해 분절을 건너뛴다.
 #   이니셜리즘: A.I.  U.S.A.  e.g.  i.e.  Ph.D.  (한두 글자+마침표가 둘 이상 '연달아')
@@ -55,8 +55,12 @@ ABBREV_WORD_RE = re.compile(
 
 
 def _is_abbrev_dot(upto: str) -> bool:
-    """'upto'(이번 종결 직전까지의 본문, 끝이 '.')가 약어 마침표면 True."""
-    return bool(ABBREV_RUN_RE.search(upto) or ABBREV_WORD_RE.search(upto))
+    """'upto'(이번 종결 직전까지의 본문, 끝이 '.')가 약어 마침표면 True.
+
+    ABBREV_RUN_RE 는 '$' 로 끝을 잡으므로 마지막 40자만 봐도 충분하다. 긴 입력에서
+    반복 토큰을 정규식이 거듭 되짚는 비용(ReDoS류)을 막으려고 꼬리만 검사한다.
+    """
+    return bool(ABBREV_RUN_RE.search(upto[-40:]) or ABBREV_WORD_RE.search(upto))
 
 
 def _split_lines(prefix: str, core: str, trail: str):
@@ -87,16 +91,13 @@ def split_sentences(block: str):
     이으면 block 과 정확히 일치한다.
     """
     out = []
-    pos = 0
     n = len(block)
-    # 선두 공백은 첫 문장의 prefix 로.
-    lead_m = re.match(r"\s*", block)
-    lead = lead_m.group(0) if lead_m else ""
-    pos = len(lead)
+    # 선두 공백은 첫 문장의 prefix 로. (re.match(r"\s*") 는 항상 매치하니 group(0)을 그대로 쓴다.)
+    lead = re.match(r"\s*", block).group(0)
     pending_prefix = lead
 
-    last = pos
-    for m in SENT_END_RE.finditer(block, pos):
+    last = len(lead)
+    for m in SENT_END_RE.finditer(block, last):
         # 단일 '.' 가 약어(A.I.·e.g.·etc.)나 숫자(1980.·3.14.) 뒤면 문장 끝이 아니다 —
         # 건너뛰어 다음 종결까지 이어 붙인다(과대분절 방지; 한국어 문장은 거의 '다/요'로 끝남).
         if m.group(1) == "." and (

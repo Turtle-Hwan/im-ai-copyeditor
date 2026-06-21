@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 
@@ -67,6 +68,7 @@ def parse_worksheet(text: str):
 
 
 def levenshtein(a: str, b: str) -> int:
+    """두 문자열의 편집 거리. 표준 두 줄 DP, O(len(a)·len(b))."""
     if a == b:
         return 0
     if not a:
@@ -120,7 +122,7 @@ def main(argv=None):
             parts.append(s["raw"])
             continue
         yun, rule = rewrites[s["idx"]]
-        new_core = yun if yun else s["core"]
+        new_core = yun or s["core"]
         parts.append(s["prefix"] + new_core + s["suffix"])
         d = levenshtein(s["core"], new_core)
         tot_core += len(s["core"])
@@ -133,7 +135,6 @@ def main(argv=None):
 
     out_path = args.out
     if not out_path:
-        import os
         out_path = os.path.join(os.path.dirname(os.path.abspath(args.segments)), "final.md")
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(final)
