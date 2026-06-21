@@ -8,7 +8,7 @@ labels: ["rule-or-example"]
 ## 종류
 - [ ] 번역 문체 translationese
 - [ ] AI 문체 ai-tell
-- [ ] 문장 다이어트 sentence
+- [ ] 문장 간소화 sentence
 
 ## 어색한 표현
 바꾸기 전 → 바꾼 뒤 형식으로 적어 주세요.

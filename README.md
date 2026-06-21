@@ -1,6 +1,6 @@
 # im-ai-copyeditor
 
-> **AI copyeditor for Korean.** AI가 쓴 한국어를 사람이 쓴 듯, 한 문장씩 교정·교열해요.
+> **AI copyeditor for Korean.** 글이 AI든 사람이든, 진짜 교정·교열가처럼 한 문장 한 문장 꼼꼼히 첨삭해요.
 
 한국어 글을 다듬는 도구예요. **뜻은 한 글자도 바꾸지 않아요.** 군더더기와 어색함만 덜어 내요.
 
@@ -43,7 +43,7 @@
 
   `이것은 단순한 앱이 아니라 삶의 방식입니다 → 이 앱은 일상을 바꿔 줘요`
 
-- **문장 다이어트**
+- **문장 간소화**
 
   `사회적 현상 → 사회 현상` · `눈으로 덮여 있는 마을 → 눈으로 덮인 마을` · `잊혀지지 → 잊히지`
 
@@ -61,9 +61,9 @@
 
 | 명령어 | 하는 일 |
 |---|---|
-| `/im-ai-copyeditor:all` | **통합**. 맞춤법 → 번역 문체 → AI 문체 → 문장 다이어트 → 문체를 한 문장씩 차례로 적용 |
+| `/im-ai-copyeditor:all` | **통합**. 맞춤법 → 번역 문체 → AI 문체 → 문장 간소화 → 문체를 한 문장씩 차례로 적용 |
 | `/im-ai-copyeditor:grammar` | 맞춤법·문체 교정. 예요/되/안, 띄어쓰기, 종결문체 통일, 사물존칭 |
-| `/im-ai-copyeditor:sentence` | 문장 다이어트. 적·의·것·들, 군더더기 "있다", 군더더기 피동, 조사 다듬기 |
+| `/im-ai-copyeditor:sentence` | 문장 간소화. 적·의·것·들, 군더더기 "있다", 군더더기 피동, 조사 다듬기 |
 | `/im-ai-copyeditor:trans` | 번역 문체 빼기. 피동→능동, 가지다·통해·대해, 무생물 주어, 대명사 남용 |
 | `/im-ai-copyeditor:ai` | AI 문체 빼기. 첫째·둘째 나열, 결말 공식, 과장 어휘, 괄호·쉼표, 클리셰 |
 
@@ -120,7 +120,7 @@ cd im-ai-copyeditor
 - `grammar-rules.md` — 맞춤법. 국립국어원 어문 규범 기준.
 - `translationese-rules.md` — 번역 문체. 한국 번역학 연구를 실용 규칙으로 옮겼어요.
 - `ai-tell-rules.md` — AI 문체. AI 글과 사람 글을 비교한 논문에 근거해요.
-- `sentence-rules.md` — 문장 다이어트. 책 [『내 문장이 그렇게 이상한가요?』](https://product.kyobobook.co.kr/detail/S000001863138)(저자 김정선, 유유, 2016)에서
+- `sentence-rules.md` — 문장 간소화. 책 [『내 문장이 그렇게 이상한가요?』](https://product.kyobobook.co.kr/detail/S000001863138)(저자 김정선, 유유, 2016)에서
   영감을 받았어요.
 - `style-guide.md` — 문체·경어법. 국립국어원 기준의 종결문체 일관성과 사물존칭·간접높임.
 - `prime-directives.md` — 모든 명령이 함께 지키는 약속.

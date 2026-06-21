@@ -4,7 +4,7 @@
     "name": "Turtle-Hwan"
   },
   "metadata": {
-    "description": "AI가 쓴 한국어를 사람 글로 교정·교열하는 스킬 마켓플레이스",
+    "description": "한국어 문장을 진짜 교정·교열가처럼 한 문장씩 첨삭하는 스킬 마켓플레이스",
     "version": "0.3.0",
     "pluginRoot": "."
   },
@@ -12,7 +12,7 @@
     {
       "name": "im-ai-copyeditor",
       "source": "./",
-      "description": "AI가 쓴 한국어를 한 문장씩 교정·교열하는 스킬. 맞춤법·번역 문체·AI 문체·문장 다이어트·문체를 차례로 적용해 뜻은 그대로 두고 다듬는다(통합 + 세부 4종).",
+      "description": "맞춤법·번역 문체·AI 문체·문장 간소화·문체를 한 문장씩 적용해, 진짜 교정·교열가처럼 뜻은 그대로 두고 다듬는 스킬(통합 + 세부 4종).",
       "version": "0.3.0",
       "keywords": ["korean", "proofreading", "윤문", "첨삭", "번역 문체", "humanize"]
     }
