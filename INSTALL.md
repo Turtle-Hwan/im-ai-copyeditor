@@ -9,12 +9,15 @@ git clone https://github.com/Turtle-Hwan/im-ai-copyeditor
 cd im-ai-copyeditor
 ```
 
-`./install.sh` 는 설치돼 있는 도구를 스스로 찾아 설치합니다. 기본은 심링크입니다. `git pull` 만 하면
-최신으로 갱신됩니다. 저장소를 지워도 유지하려면 `--copy` 를 붙입니다.
+`./install.sh` 는 설치돼 있는 도구를 스스로 찾아 설치합니다.
+
+> [!NOTE]
+> 기본은 심링크입니다. `git pull` 만 하면 최신으로 갱신됩니다. 저장소를 지워도 유지하려면 `--copy` 를 붙입니다.
 
 ## Claude Code
 
-한 줄 설치를 권합니다. 클론하지 않아도 됩니다.
+> [!TIP]
+> 한 줄 설치를 권합니다. 클론하지 않아도 됩니다.
 
 ```
 /plugin marketplace add Turtle-Hwan/im-ai-copyeditor
