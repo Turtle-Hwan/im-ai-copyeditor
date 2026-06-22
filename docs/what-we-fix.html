@@ -13,15 +13,13 @@
     -webkit-font-smoothing:antialiased;
     position:relative;
   }
-  /* 종이 가장자리 얇은 테두리 — 문서 느낌 */
   .sheet { position:absolute; inset:26px; border:1px solid #DcD7C8; pointer-events:none; }
 
   .head { display:flex; justify-content:space-between; align-items:flex-start; }
   .brand { font-family:"Georgia","AppleMyungjo",serif; font-size:56px; font-weight:700; letter-spacing:-1px; color:#15396A; }
   .brand .ko { display:block; font-family:"AppleMyungjo",serif; font-size:21px; font-weight:400; color:#5B6B82; letter-spacing:2px; margin-top:6px; }
-  .seal { border:2.5px solid #B23A2E; color:#B23A2E; font-size:26px; font-weight:700; padding:12px 10px; line-height:1; letter-spacing:2px; transform:rotate(-6deg); border-radius:3px; writing-mode:vertical-rl; }
+  .seal { border:2.5px solid #B23A2E; color:#B23A2E; font-size:25px; font-weight:700; padding:12px 9px; line-height:1.05; letter-spacing:2px; transform:rotate(-6deg); border-radius:3px; writing-mode:vertical-rl; }
 
-  /* 관보식 이중 괘선 */
   .drule { margin:22px 0 6px; }
   .drule .l1 { height:2.5px; background:#15396A; }
   .drule .l2 { height:1px; background:#15396A; margin-top:3px; }
@@ -32,8 +30,8 @@
 
   .row { display:grid; grid-template-columns:46% 8% 46%; align-items:center; padding:12px 0; }
   .row + .row { border-top:1px solid #E7E1D2; }
-  .num { position:absolute; margin-left:-46px; color:#B6AE99; font-size:17px; }
-  .before .main, .after .main { font-size:27px; line-height:1.32; }
+  .num { position:absolute; margin-left:-44px; color:#B6AE99; font-size:19px; }
+  .before .main, .after .main { font-size:24px; line-height:1.32; }
   .after .main { color:#1B2C20; }
   .before s { color:#B23A2E; text-decoration-thickness:2px; }
   .before .label { font-size:14.5px; color:#B23A2E; margin-top:6px; letter-spacing:.2px; }
@@ -51,47 +49,47 @@
 
   <div class="head">
     <div class="brand">im-ai-copyeditor<span class="ko">한국어 교정·교열 — 무엇을 손보나요</span></div>
-    <div class="seal">校正</div>
+    <div class="seal">교정</div>
   </div>
   <div class="drule"><div class="l1"></div><div class="l2"></div></div>
 
   <div class="cols">
-    <div class="b">원문 原文</div>
-    <div class="a">교정 校正</div>
+    <div class="b">원문</div>
+    <div class="a">교정</div>
   </div>
 
   <div class="row">
-    <div class="before"><span class="num">一</span><div class="main">커피 나오<s>셨</s>습니다</div><div class="label">맞춤법·경어법 · 사물존칭</div></div>
+    <div class="before"><span class="num">①</span><div class="main">커피 나오<s>셨</s>습니다</div><div class="label">맞춤법·경어법 · 사물존칭</div></div>
     <div class="arrow">→</div>
     <div class="after"><div class="main">커피 나왔습니다</div><div class="note">사물에 ‘-시-’를 붙이지 않음</div></div>
   </div>
 
   <div class="row">
-    <div class="before"><span class="num">二</span><div class="main">경쟁력을 <s>가지고 있다</s></div><div class="label">번역 문체 · “가지다” 직역</div></div>
+    <div class="before"><span class="num">②</span><div class="main">경쟁력을 <s>가지고 있다</s></div><div class="label">번역 문체 · “가지다” 직역</div></div>
     <div class="arrow">→</div>
     <div class="after"><div class="main">경쟁력이 강하다</div><div class="note">한국어 술어로 환원</div></div>
   </div>
 
   <div class="row">
-    <div class="before"><span class="num">三</span><div class="main">이것은 <s>단순한 앱이 아니라</s> 삶의 방식입니다</div><div class="label">AI 문체 · 격상 공식</div></div>
+    <div class="before"><span class="num">③</span><div class="main">이것은 <s>단순한 앱이 아니라</s> 삶의 방식입니다</div><div class="label">AI 문체 · 격상 공식</div></div>
     <div class="arrow">→</div>
-    <div class="after"><div class="main">이 앱은 일상을 바꿔 줘요</div><div class="note">틀을 풀어 단언으로</div></div>
+    <div class="after"><div class="main">이 앱은 일상을 바꿔 줍니다</div><div class="note">틀을 풀어 단언으로</div></div>
   </div>
 
   <div class="row">
-    <div class="before"><span class="num">四</span><div class="main">환경<s>적</s> 요인<s>의</s> 변화</div><div class="label">문장 간소화 · 적·의·것·들</div></div>
+    <div class="before"><span class="num">④</span><div class="main">환경<s>적</s> 요인<s>의</s> 변화</div><div class="label">문장 간소화 · 적·의·것·들</div></div>
     <div class="arrow">→</div>
     <div class="after"><div class="main">환경 요인 변화</div><div class="note">접사 ‘-적’·조사 ‘-의’를 덜기</div></div>
   </div>
 
   <div class="row">
-    <div class="before"><span class="num">五</span><div class="main">눈으로 <s>덮여 있는</s> 마을</div><div class="label">문장 간소화 · 군더더기 “있다”</div></div>
+    <div class="before"><span class="num">⑤</span><div class="main">눈으로 <s>덮여 있는</s> 마을</div><div class="label">문장 간소화 · 군더더기 “있다”</div></div>
     <div class="arrow">→</div>
     <div class="after"><div class="main">눈으로 덮인 마을</div><div class="note">관형형으로 줄이기</div></div>
   </div>
 
   <div class="row">
-    <div class="before"><span class="num">六</span><div class="main">있어요 … 정리했<s>습니다</s></div><div class="label">문체 · 종결 불일치</div></div>
+    <div class="before"><span class="num">⑥</span><div class="main">있어요 … 정리했<s>습니다</s></div><div class="label">문체 · 종결 불일치</div></div>
     <div class="arrow">→</div>
     <div class="after"><div class="main">있어요 … 정리했어요</div><div class="note">한 글에 한 문체로 통일</div></div>
   </div>
