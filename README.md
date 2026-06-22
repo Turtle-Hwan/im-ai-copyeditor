@@ -54,7 +54,7 @@ AI가 쓴 글이든 사람이 쓴 글이든, 진짜 교정·교열가처럼 한 
 curl -fsSL https://raw.githubusercontent.com/Turtle-Hwan/im-ai-copyeditor/main/install.sh | bash
 ```
 
-공개 저장소를 받아 깔려 있는 도구(**Claude Code · Codex · OpenClaw · Hermes · Gemini CLI**)를 스스로 찾아 **스킬**로 연결해요. 설치 뒤 그냥 **"이 글 문장 다듬어줘"** 라고 하거나 스킬을 이름으로 불러요. 특정 도구만 깔려면 끝에 `-s -- --claude-only` 처럼 붙여요.
+공개 저장소를 받아 깔린 도구(**Claude Code · Codex · OpenClaw · Hermes · Gemini CLI**)를 스스로 찾아 **스킬**로 연결해요. 설치 뒤 그냥 **"이 글 문장 다듬어줘"** 라고 하거나 스킬을 이름으로 불러요. 특정 도구만 깔려면 끝에 `-s -- --claude-only` 처럼 붙여요.
 
 ### Claude Code 플러그인 — 슬래시 명령 `/im-ai-copyeditor:all`
 
