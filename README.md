@@ -38,7 +38,7 @@ AI가 쓴 글이든 사람이 쓴 글이든, 진짜 교정·교열가처럼 한 
 | `/im-ai-copyeditor:sentence` | 문장 간소화. 적·의·것·들, 군더더기 "있다", 군더더기 피동, 조사 다듬기 |
 | `/im-ai-copyeditor:trans` | 번역 문체 빼기. 피동→능동, 가지다·통해·대해, 무생물 주어, 대명사 남용 |
 | `/im-ai-copyeditor:ai` | AI 문체 빼기. 첫째·둘째 나열, 결말 공식, 과장 어휘, 괄호·쉼표, 클리셰 |
-| `/im-ai-copyeditor:grill` | **함께 고치기(대화형)**. 전체 맥락·표현이 맞는지 한 번에 하나씩 되묻고, 합의되면 압축·재집필까지 |
+| `/im-ai-copyeditor:grill` | **대화형 함께 고치기**. 전체 맥락·표현이 맞는지 한 번에 하나씩 되묻고, 합의되면 압축·재집필까지 |
 
 > [!TIP]
 > `grill`은 사용자에게 전체 맥락까지 되물으며 함께 고치고, 동의하면 문장을 합치거나 줄여 주는 스킬이에요.
@@ -48,34 +48,34 @@ AI가 쓴 글이든 사람이 쓴 글이든, 진짜 교정·교열가처럼 한 
 
 ## 설치
 
-### 한 줄 설치 — 가장 간편 (스킬)
+### 한 줄 설치
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Turtle-Hwan/im-ai-copyeditor/main/install.sh | bash
 ```
 
-공개 저장소를 받아 깔린 도구(**Claude Code · Codex · OpenClaw · Hermes · Gemini CLI**)를 스스로 찾아 **스킬**로 연결해요. 설치 뒤 그냥 **"이 글 문장 다듬어줘"** 라고 하거나 스킬을 이름으로 불러요. 특정 도구만 깔려면 끝에 `-s -- --claude-only` 처럼 붙여요.
+가장 간편한 방법이에요. **Claude Code · Codex · OpenClaw · Hermes · Gemini CLI** 중 깔린 도구를 스스로 찾아 **스킬**로 연결해요. 설치 뒤 그냥 **"이 글 문장 다듬어줘"** 라고 하거나 스킬을 이름으로 불러요. 특정 도구만 깔려면 끝에 `-s -- --claude-only` 처럼 붙여요.
 
-### Claude Code 플러그인 — 슬래시 명령 `/im-ai-copyeditor:all`
+### Claude Code 플러그인
 
 ```
 /plugin marketplace add Turtle-Hwan/im-ai-copyeditor
 /plugin install im-ai-copyeditor@im-ai-copyeditor
 ```
 
-플러그인으로 깔면 `/im-ai-copyeditor:all`·`:grammar`·`:sentence`·`:trans`·`:ai` 슬래시 명령이 생겨요. (위 한 줄 설치는 **스킬**만 깔아 이름·자연어로 불러요 — 둘은 부르는 방식만 다르고, 같은 규칙을 써요.)
+플러그인으로 깔면 `/im-ai-copyeditor:all`·`:grammar`·`:sentence`·`:trans`·`:ai` 슬래시 명령이 생겨요. 위 한 줄 설치는 **스킬**만 깔아 이름이나 자연어로 부르고요. 부르는 방식만 다를 뿐 규칙은 똑같아요.
 
 ### 도구별 설치 위치
 
 | 도구 | 어디에 깔리나 | 부르는 법 |
 |---|---|---|
-| **Claude Code** | `~/.claude/skills/` (스킬) · 마켓플레이스(플러그인) | `im-ai-copyeditor` 스킬 · `/im-ai-copyeditor:all` · "이 글 다듬어줘" |
+| **Claude Code** | 스킬 `~/.claude/skills/` · 플러그인 마켓플레이스 | `im-ai-copyeditor` 스킬 · `/im-ai-copyeditor:all` · "이 글 다듬어줘" |
 | **Codex** | `~/.codex/skills/` · `~/.agents/skills/` | "이 글 문장 다듬어줘" |
 | **OpenClaw** | `~/.openclaw/skills/` · `~/.agents/skills/` | "이 글 문장 다듬어줘" |
 | **Hermes** | `~/.hermes/skills/writing/` | "이 글 문장 다듬어줘" |
-| **Gemini CLI** | `gemini extensions link` (확장) | `/im-ai-copyeditor` |
+| **Gemini CLI** | 확장 `gemini extensions link` | `/im-ai-copyeditor` |
 
-### 직접 클론 — 수정·개발용
+### 직접 클론
 
 ```bash
 git clone https://github.com/Turtle-Hwan/im-ai-copyeditor
@@ -83,7 +83,7 @@ cd im-ai-copyeditor
 ./install.sh            # 깔린 도구를 자동 감지해 연결
 ```
 
-심링크가 기본이라 `git pull` 로 갱신돼요. 옵션 — 특정 도구만 `--claude-only` 등 · 복사 `--copy` · 미리보기 `--dry-run`.
+코드를 고치거나 개발할 때 써요. 심링크가 기본이라 `git pull` 로 갱신돼요. 특정 도구만 깔려면 `--claude-only`, 복사로 깔려면 `--copy`, 미리 보려면 `--dry-run` 을 붙여요.
 
 ```bash
 ./update.sh    # 새 버전 확인·적용
@@ -95,29 +95,29 @@ cd im-ai-copyeditor
 핵심은 **LLM이 모든 문장을 한 줄씩 읽고 다듬는다는 데** 있어요. 정규식으로 한꺼번에 바꾸지 않아요.
 한 문장이라도 빠뜨리지 않으려고 작은 도구 두 개로 흐름을 묶었어요.
 
-1. **자르기** — `scripts/segment.py` 가 글을 문장 부호 기준으로 잘라 작업표를 만들어요.
+1. **자르기.** `scripts/segment.py` 가 글을 문장 부호 기준으로 잘라 작업표를 만들어요.
    제목·목록·코드 블록은 손대지 않아요.
-2. **다듬기** — 에이전트가 작업표의 문장을 위에서 아래로 하나씩 읽고 고쳐요. 고칠 게 없으면 그대로 둬요.
-3. **되붙이기** — `scripts/reassemble.py` 가 다듬은 문장을 원래 구조에 맞춰 다시 한 편으로 이어요.
+2. **다듬기.** 에이전트가 작업표의 문장을 위에서 아래로 하나씩 읽고 고쳐요. 고칠 게 없으면 그대로 둬요.
+3. **되붙이기.** `scripts/reassemble.py` 가 다듬은 문장을 원래 구조에 맞춰 다시 한 편으로 이어요.
 
 되붙일 때 두 가지를 자동으로 지켜요. 들어간 문장 수와 나온 문장 수가 다르면 멈춰요. 너무 많이
 바뀌어도 멈춰요. 둘 다 원문을 망치지 않으려는 장치예요.
 
-원하면 `scripts/scan.py` 로 정규식 힌트를 켤 수 있어요. 맞춤법·표기 오타(예요/에요·됬·역활 같은
-고정 오류)처럼 정규식이 확실히 잘 잡는 것만 규칙 번호로 살짝 달아 줘요. 번역 문체·AI 문체처럼
+원하면 `scripts/scan.py` 로 정규식 힌트를 켤 수 있어요. 예요/에요·됬·역활 같은 고정 맞춤법·표기
+오타처럼 정규식이 확실히 잘 잡는 것만 규칙 번호로 살짝 달아 줘요. 번역 문체·AI 문체처럼
 문맥을 봐야 하는 건 정규식 대신 규칙 글의 예시로 에이전트가 직접 판단해요. 다듬는 일은 어디까지나 에이전트가 해요.
 
 ## 규칙
 
 규칙은 모두 `references/` 폴더에 글로 정리했어요. 국립국어원 어문 규범과 번역학·문체 논문에 근거해요.
 
-- `grammar-rules.md` — 맞춤법. 국립국어원 어문 규범 기준.
-- `translationese-rules.md` — 번역 문체. 한국 번역학 연구를 실용 규칙으로 옮겼어요.
-- `ai-tell-rules.md` — AI 문체. AI 글과 사람 글을 비교한 논문에 근거해요.
-- `sentence-rules.md` — 문장 간소화. 책 [『내 문장이 그렇게 이상한가요?』](https://product.kyobobook.co.kr/detail/S000001863138)(저자 김정선, 유유, 2016)에서
-  영감을 받았어요.
-- `style-guide.md` — 문체·경어법. 국립국어원 기준의 종결문체 일관성과 사물존칭·간접높임.
-- `prime-directives.md` — 모든 명령이 함께 지키는 약속.
+- `grammar-rules.md`: 맞춤법. 국립국어원 어문 규범 기준.
+- `translationese-rules.md`: 번역 문체. 한국 번역학 연구를 실용 규칙으로 옮겼어요.
+- `ai-tell-rules.md`: AI 문체. AI 글과 사람 글을 비교한 논문에 근거해요.
+- `sentence-rules.md`: 문장 간소화. 책 [『내 문장이 그렇게 이상한가요?』](https://product.kyobobook.co.kr/detail/S000001863138)에서
+  영감을 받았어요. 김정선 지음, 유유, 2016.
+- `style-guide.md`: 문체·경어법. 국립국어원 기준의 종결문체 일관성과 사물존칭·간접높임.
+- `prime-directives.md`: 모든 명령이 함께 지키는 약속.
 
 각 규칙은 "무엇을 찾고 어떻게 고치고 예를 들면 이렇게" 형식이에요. 예시만 읽어도 감이 와요.
 
