@@ -34,7 +34,7 @@ DRYRUN=0
 TS="$(date +%Y%m%d-%H%M%S)"
 
 # 설치할 스킬 폴더(영문 별칭 -sentence 포함).
-SKILLS=(im-ai-copyeditor im-ai-copyeditor-sentence im-ai-copyeditor-trans im-ai-copyeditor-ai im-ai-copyeditor-grammar)
+SKILLS=(im-ai-copyeditor im-ai-copyeditor-sentence im-ai-copyeditor-trans im-ai-copyeditor-ai im-ai-copyeditor-grammar im-ai-copyeditor-grill)
 
 print_help() {
   cat <<'H'
