@@ -84,8 +84,8 @@ curl -fsSL https://raw.githubusercontent.com/Turtle-Hwan/im-ai-copyeditor/main/i
 |---|---|---|
 | **Claude Code** | 스킬 `~/.claude/skills/` · 플러그인 마켓플레이스 | `im-ai-copyeditor` 스킬 · `/im-ai-copyeditor:all` · "이 글 다듬어줘" |
 | **Codex** | `~/.codex/skills/` · `~/.agents/skills/` | "이 글 문장 다듬어줘" |
-| **OpenClaw** | `~/.openclaw/skills/` · `~/.agents/skills/` | "이 글 문장 다듬어줘" |
-| **Hermes** | `~/.hermes/skills/writing/` | "이 글 문장 다듬어줘" |
+| **OpenClaw** | 스킬 `~/.openclaw/skills/` · `~/.agents/skills/` · 플러그인 `openclaw.plugin.json` | `/im-ai-copyeditor` · "이 글 문장 다듬어줘" |
+| **Hermes** | `~/.hermes/skills/` · tap `hermes skills tap add` | "이 글 문장 다듬어줘" |
 | **Gemini CLI** | 확장 `gemini extensions link` | `/im-ai-copyeditor` |
 
 ### 직접 클론

@@ -1,6 +1,15 @@
 ---
 name: im-ai-copyeditor-trans
 description: 한국어 번역 문체를 문장 단위로 걷어 낸다. 피동태→능동, "가지다" 직역, "-로 인하여/-에 대하여/-을 통해", 무생물·추상 주어, 영어 대명사 남용, 관계절 좌향 수식 등을 자연스러운 한국어로. 뜻은 한 글자도 바꾸지 않는다. 트리거 — "번역 문체 고쳐", "번역체 자연스럽게", "영어 직역 티 빼줘", "번역 문체 제거". 문장 간소화까지: -sentence / AI 문체까지: -ai / 맞춤법·문체: -grammar / 전부: im-ai-copyeditor.
+compatibility: 문장 분절 스크립트 실행에 python3(없으면 python) 필요.
+metadata:
+  version: "0.3.0"
+  openclaw:
+    requires:
+      anyBins: [python3, python]
+  hermes:
+    category: writing
+    tags: [korean, proofreading, translationese]
 ---
 
 # im-ai-copyeditor-trans — 번역 문체 제거

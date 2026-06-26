@@ -1,6 +1,15 @@
 ---
 name: im-ai-copyeditor-sentence
 description: 책 『내 문장이 그렇게 이상한가요?』에서 영감을 받은 규칙으로 한국어 문장을 문장 단위로 첨삭한다. 적·의·것·들, 군더더기 "있다", 이중피동, 조사 정밀성, "수 있는"·"시작하다" 남용, 괄호·쉼표 남용을 덜어 내는 문장 간소화. 뜻은 한 글자도 바꾸지 않는다. 트리거 — "문장 간소화", "군더더기 빼줘", "적의것들", "문장 줄여줘", "문장 첨삭". 번역 문체까지: -trans / AI 문체까지: -ai / 맞춤법·문체: -grammar / 전부: im-ai-copyeditor.
+compatibility: 문장 분절 스크립트 실행에 python3(없으면 python) 필요.
+metadata:
+  version: "0.3.0"
+  openclaw:
+    requires:
+      anyBins: [python3, python]
+  hermes:
+    category: writing
+    tags: [korean, proofreading, concision]
 ---
 
 # im-ai-copyeditor-sentence — 문장 간소화

@@ -1,6 +1,15 @@
 ---
 name: im-ai-copyeditor
 description: 한국어 문장을 문장 단위로 첨삭·윤문하는 통합 명령. 맞춤법 → 번역 문체 → AI 문체 → 문장 간소화 → 문체를 순서대로 한 문장씩 적용해, 뜻은 한 글자도 바꾸지 않고 사람 문체로 다듬는다. 트리거 — "한국어 첨삭", "문장 윤문", "글 다듬어줘", "im-ai-copyeditor", "문장 간소화", "번역 문체+AI 문체 같이 다듬어줘". 국립국어원 맞춤법과 번역학·문체 논문에 근거하며, 문장 교정은 책 『내 문장이 그렇게 이상한가요?』에서 영감을 받았다. 세부 명령 — 문장 간소화만: -sentence / 번역 문체만: -trans / AI 문체만: -ai / 맞춤법·문체만: -grammar.
+compatibility: 문장 분절 스크립트 실행에 python3(없으면 python) 필요.
+metadata:
+  version: "0.3.0"
+  openclaw:
+    requires:
+      anyBins: [python3, python]
+  hermes:
+    category: writing
+    tags: [korean, proofreading, humanize]
 ---
 
 # im-ai-copyeditor — 통합 첨삭·윤문
