@@ -100,7 +100,7 @@ class TestRoundtrip(unittest.TestCase):
         ws = seg.build_worksheet(seg.segment(text))
         won = [ln for ln in ws.splitlines() if ln.startswith("원문:")]
         self.assertEqual(won[0], "원문: 이것은 긴 문장인데 줄바꿈으로 나뉘어 있다.")
-        # 접힌 원문 줄에는 줄바꿈이 없어야 한다(scan.py 가 문장 전체를 보게).
+        # 접힌 원문 줄에는 줄바꿈이 없어야 한다(원문 한 줄 = 한 문장).
         self.assertNotIn("\n", won[0])
 
     def test_count_mismatch_hard_fails(self):

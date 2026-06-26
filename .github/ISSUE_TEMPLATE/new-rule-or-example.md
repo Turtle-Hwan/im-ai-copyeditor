@@ -6,9 +6,11 @@ labels: ["rule-or-example"]
 ---
 
 ## 종류
+- [ ] 맞춤법 / 문체 grammar-style
 - [ ] 번역 문체 translationese
 - [ ] AI 문체 ai-tell
 - [ ] 문장 간소화 sentence
+- [ ] 공공언어 / 일본어투 public-language
 
 ## 어색한 표현
 바꾸기 전 → 바꾼 뒤 형식으로 적어 주세요.
