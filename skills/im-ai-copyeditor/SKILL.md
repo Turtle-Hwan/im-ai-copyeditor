@@ -29,15 +29,6 @@ python3 $SKILL/scripts/segment.py _workspace/{run_id}/01_input.txt --outdir _wor
 ```
 → 원본 구조 정보 `segments.json` + 작업 파일 `worksheet.md` 생성. 나온 문장 수 N 을 확인한다.
 
-**Phase 2.5 — 정규식 후보 힌트. 선택 단계다**
-```
-python3 $SKILL/scripts/scan.py _workspace/{run_id}/worksheet.md
-```
-워크시트의 각 문장에 의심 규칙 ID를 `힌트:` 줄로 단다. 힌트는 **고정밀 맞춤법·표기 오류**만 잡는다.
-예요/에요·됬·역활·-ㄹ께 같은 고정 오타로, 정규식이 룰북 예시보다 확실히 잘 잡는 영역이다.
-번역 문체·AI 문체·문장 간소화는 정규식이 느슨해 빼 두었으니 Phase 3 룰북의 예시로 직접 판단한다.
-힌트가 없는 문장도 반드시 읽고 판단한다. 힌트는 윤문을 대신하지 않으며, 건너뛰어도 된다.
-
 **Phase 3 — 룰북 로드. 다섯 개 모두**
 순서대로 적용한다. 먼저 글 전체의 우세 문체를 정한다. 해요체·합니다체·한다체 중 하나로.
 1. [맞춤법] `$SKILL/references/grammar-rules.md`

@@ -199,7 +199,7 @@ def build_worksheet(segments) -> str:
             lines.append("")
         else:
             lines.append(f"<!-- SEG {s['idx']} prose -->")
-            # 소프트랩으로 core 안에 줄바꿈이 있어도 표시는 한 줄로 접는다(scan.py 가 문장 전체를 보게).
+            # 소프트랩으로 core 안에 줄바꿈이 있어도 표시는 한 줄로 접는다(원문 한 줄 = 한 문장).
             # 실제 재조립은 segments.json 의 core 를 쓰므로 표시 접기는 무손실에 영향 없음.
             shown_core = re.sub(r"\s*\n\s*", " ", s["core"])
             lines.append(f"원문: {shown_core}")
