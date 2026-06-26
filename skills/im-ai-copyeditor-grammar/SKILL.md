@@ -9,6 +9,7 @@ description: 한국어 맞춤법과 문체를 문장 단위로 교정한다. 예
 바꾸지 않아요. 뜻·수치·고유명사·인용은 그대로 둬요.
 
 스킬 디렉토리를 `$SKILL` 로 표기해요. Claude Code 는 `${CLAUDE_SKILL_DIR}` 나 `${CLAUDE_PLUGIN_ROOT}`.
+아래 명령의 `python3` 는 환경에 `python3` 가 없으면 `python`(Windows 는 `py -3`)으로 바꿔 실행해요.
 
 ## 절차
 

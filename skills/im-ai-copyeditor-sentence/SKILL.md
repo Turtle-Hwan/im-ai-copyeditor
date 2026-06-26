@@ -9,6 +9,7 @@ description: 책 『내 문장이 그렇게 이상한가요?』에서 영감을 
 한 문장씩 다듬는다. 정규식으로 한꺼번에 바꾸지 않는다. 뜻·수치·고유명사·인용은 그대로 둔다.
 
 스킬 디렉토리를 `$SKILL` 로 표기한다. Claude Code 는 `${CLAUDE_SKILL_DIR}` 나 `${CLAUDE_PLUGIN_ROOT}`.
+아래 명령의 `python3` 는 환경에 `python3` 가 없으면 `python`(Windows 는 `py -3`)으로 바꿔 실행한다.
 
 ## 절차
 

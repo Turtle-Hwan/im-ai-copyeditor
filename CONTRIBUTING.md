@@ -50,12 +50,20 @@
 ## 제출 전 점검
 
 `scripts/` 코드를 고쳤다면 검사를 한 번 돌려 주세요. 파이썬 표준 기능만 쓰니 따로 설치할 게 없어요.
+`python3` 가 없으면 `python`(Windows 는 `py -3`)으로 실행해요.
 
 ```bash
 python3 -m unittest discover -s tests
 ```
 
-규칙과 예시만 고쳤다면 검사는 안 돌려도 돼요. 편하게 Pull Request 를 열어 주세요.
+`references/` 나 `scripts/` 를 고쳤다면 각 스킬 패키지에 사본을 맞추도록 동기화를 돌려 주세요.
+(안 맞추면 위 검사가 실패해요. 심링크가 Windows 에서 깨져서 실제 파일로 복사해 두거든요.)
+
+```bash
+python3 scripts/sync_skills.py
+```
+
+규칙과 예시만 고쳤더라도 위 동기화는 돌려 주세요. 그 밖엔 편하게 Pull Request 를 열어 주세요.
 
 ## 약속
 

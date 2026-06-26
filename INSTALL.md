@@ -14,6 +14,11 @@ cd im-ai-copyeditor
 > [!NOTE]
 > 기본은 심링크입니다. `git pull` 만 하면 최신으로 갱신됩니다. 저장소를 지워도 유지하려면 `--copy` 를 붙입니다.
 
+> [!NOTE]
+> **Windows** 에서도 별도 설정 없이 그대로 동작합니다. 스킬 패키지는 심링크가 아니라 실제 파일이라
+> `git clone`·`/plugin marketplace`·`./install.sh` 가 모두 정상입니다. `./install.sh` 는 Windows 를 감지해
+> 자동으로 복사 모드로 설치합니다. 파이썬은 `python3` 가 없으면 `python` 또는 `py -3` 로 실행하세요.
+
 ## Claude Code
 
 > [!TIP]

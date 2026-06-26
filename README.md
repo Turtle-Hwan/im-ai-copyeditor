@@ -103,6 +103,10 @@ cd im-ai-copyeditor
 ./uninstall.sh # 제거
 ```
 
+### Windows
+
+별도 설정 없이 그대로 깔려요. 스킬 패키지가 실제 파일이라(심링크를 쓰지 않아요) `git clone`·`/plugin marketplace`·`./install.sh` 가 모두 정상 동작해요. `./install.sh` 는 Windows 를 감지해 자동으로 복사(`--copy`) 모드로 설치하고요. 파이썬은 `python3` 가 없으면 `python` 또는 `py -3` 로 실행돼요.
+
 ## 동작 방식
 
 핵심은 **LLM이 모든 문장을 한 줄씩 읽고 다듬는다는 데** 있어요. 정규식으로 한꺼번에 바꾸지 않아요.
@@ -145,7 +149,14 @@ cd im-ai-copyeditor
 python3 -m unittest discover -s tests
 ```
 
-별다른 라이브러리 설치 없이 파이썬 표준 기능만 써요.
+별다른 라이브러리 설치 없이 파이썬 표준 기능만 써요. `python3` 가 없으면 `python`(Windows 는 `py -3`)으로 실행해요.
+
+`references/` 나 `scripts/` 를 고쳤다면 각 스킬 패키지에 반영하도록 동기화를 한 번 돌려요.
+
+```bash
+python3 scripts/sync_skills.py          # 공유 자원을 스킬 패키지에 복사
+python3 scripts/sync_skills.py --check  # 어긋남만 확인(검사가 이걸로 막아요)
+```
 
 ## Star History
 

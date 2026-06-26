@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # im-ai-copyeditor — 여러 AI 도구에 한 번에 설치하는 스크립트.
 # `./install.sh` 한 번이면 설치돼 있는 도구(claude/codex/openclaw/hermes/gemini)를 스스로 찾아 스킬을
-# 연결한다. 기본은 심링크(저장소를 고치면 바로 반영, `git pull` 로 갱신).
+# 연결한다. 기본은 심링크(저장소를 고치면 바로 반영, `git pull` 로 갱신). Windows 에선 심링크가
+# 깨지므로 자동으로 복사 모드를 쓴다.
 # 저장소 없이 바로 실행해도 된다:  curl -fsSL <…>/main/install.sh | bash  (공개 저장소를 받아 설치).
 set -euo pipefail
 
@@ -80,6 +81,14 @@ while [ $# -gt 0 ]; do
   shift
 done
 
+# Windows(Git Bash/MSYS/Cygwin)에선 심링크가 깨진 텍스트 파일로 풀려 스킬이 동작하지 않는다.
+# 그런 환경에선 자동으로 복사 모드로 전환한다.
+if [ "$MODE" = symlink ]; then
+  case "$(uname -s 2>/dev/null)" in
+    MINGW*|MSYS*|CYGWIN*) MODE=copy; echo "Windows 환경 감지 → 복사 모드(--copy)로 설치합니다." ;;
+  esac
+fi
+
 run() { echo "+ $*"; [ "$DRYRUN" = 1 ] || "$@"; }
 
 # 도구가 설치됐는지: PATH 에 있거나, 홈 폴더가 있으면 "있음".
@@ -113,7 +122,7 @@ install_one() {  # $1=src, $2=dest
   [ "$rc" = 2 ] && return 1
   case "$MODE" in
     symlink) run ln -s "$src" "$dest" ;;
-    copy)    run cp -RL "$src" "$dest" ;;
+    copy)    run cp -R "$src" "$dest" ;;
   esac
   echo "설치됨: $dest"
 }
