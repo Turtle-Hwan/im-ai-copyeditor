@@ -1,4 +1,17 @@
-# im-ai-copyeditor
+<div align="center">
+
+# ai-copyeditor
+
+**진짜 교정·교열가처럼 문장 하나하나 꼼꼼히 첨삭해서 사람이 읽기 좋은 글로 다듬는 스킬**
+
+[설치](#설치) · [명령어](#명령어) · [동작 방식](#동작-방식) · [규칙](#규칙) · [기여](#기여)
+
+![License](https://img.shields.io/badge/license-MIT-green)
+![Version](https://img.shields.io/badge/version-0.3.0-blue)
+![Tools](https://img.shields.io/badge/tools-Claude_Code_·_Codex_·_Gemini_CLI-black)
+![Stars](https://img.shields.io/github/stars/Turtle-Hwan/im-ai-copyeditor)
+
+</div>
 
 > [!IMPORTANT]
 > 다양한 어휘와 수려한 문체로 우아하게 표현할 수 있는 한글을 AI가 너무 못 쓰는 것이 답답했어요.
