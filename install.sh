@@ -45,7 +45,7 @@ print_help() {
   Claude  : ~/.claude/skills/
   Codex   : ~/.codex/skills/   + ~/.agents/skills/
   OpenClaw: ~/.openclaw/skills/ + ~/.agents/skills/
-  Hermes  : ~/.hermes/skills/writing/
+  Hermes  : ~/.hermes/skills/
   Gemini  : gemini extensions link (gemini-extension.json + GEMINI.md + commands/)
 
 옵션:
@@ -146,7 +146,7 @@ if want openclaw && present openclaw "$OPENCLAW_HOME"; then
   echo "== OpenClaw =="; install_skills_into "$OPENCLAW_HOME/skills"; install_skills_into "$AGENTS_HOME/skills"; DID=1
 fi
 if want hermes && present hermes "$HERMES_HOME"; then
-  echo "== Hermes =="; install_skills_into "$HERMES_HOME/skills/writing"; DID=1
+  echo "== Hermes =="; install_skills_into "$HERMES_HOME/skills"; DID=1
 fi
 if { [ "$ONLY" = gemini ] || { [ -z "$ONLY" ] && [ "$DO_GEMINI" != no ]; }; } && command -v gemini >/dev/null 2>&1; then
   echo "== Gemini CLI =="

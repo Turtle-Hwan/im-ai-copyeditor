@@ -49,10 +49,19 @@ cd im-ai-copyeditor
 ./install.sh --openclaw-only      # → ~/.openclaw/skills/ 와 ~/.agents/skills/
 ```
 
+설치한 스킬은 자동 발견되고, `user-invocable` 기본값이라 슬래시 명령으로도 노출됩니다. 파이썬 의존은 각 스킬의 `metadata.openclaw.requires.anyBins` 로 게이팅합니다. 플러그인으로 배포하려면 루트의 `openclaw.plugin.json` 매니페스트를 씁니다.
+
 ## Hermes
 
 ```bash
-./install.sh --hermes-only        # → ~/.hermes/skills/writing/
+./install.sh --hermes-only        # → ~/.hermes/skills/
+```
+
+저장소가 `skills/` 레이아웃이라 [agentskills.io](https://agentskills.io/specification) 표준 tap 으로도 받습니다.
+
+```bash
+hermes skills tap add Turtle-Hwan/im-ai-copyeditor
+hermes skills install Turtle-Hwan/im-ai-copyeditor/im-ai-copyeditor
 ```
 
 ## Gemini CLI

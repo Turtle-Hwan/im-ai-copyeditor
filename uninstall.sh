@@ -38,7 +38,7 @@ remove_from() {  # $1=대상 skills 디렉토리
 remove_from "$CLAUDE_HOME/skills"
 remove_from "$CODEX_HOME/skills"
 remove_from "$OPENCLAW_HOME/skills"
-remove_from "$HERMES_HOME/skills/writing"
+remove_from "$HERMES_HOME/skills"
 remove_from "$AGENTS_HOME/skills"
 
 if command -v gemini >/dev/null 2>&1; then

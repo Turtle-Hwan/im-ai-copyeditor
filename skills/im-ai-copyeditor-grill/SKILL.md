@@ -1,6 +1,11 @@
 ---
 name: im-ai-copyeditor-grill
 description: 한국어 글을 사용자와 되물으며 함께 고친다. 문장이 전체 맥락에 맞는지·표현이 의도에 맞는지 끈질기게 묻고, 합의되면 교정·교열은 물론 압축·재집필까지 한다. 트리거 — "같이 고치자", "되물어줘", "grill", "맥락 봐줘", "더 줄여줘", "이 표현 맞아?". 순수 교정만 빠르게 하려면 im-ai-copyeditor.
+metadata:
+  version: "0.3.0"
+  hermes:
+    category: writing
+    tags: [korean, proofreading, interactive]
 ---
 
 이 글을 더 잘 쓰도록 끈질기게 되묻는다. 문장마다 — 전체 맥락에 맞는지, 표현이 의도에 맞는지, 더 줄일 수 있는지 — 따지고, 결정들의 의존 관계를 하나씩 풀어 간다. 질문마다 추천안을 같이 준다.
