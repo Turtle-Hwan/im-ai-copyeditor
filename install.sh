@@ -37,6 +37,9 @@ TS="$(date +%Y%m%d-%H%M%S)"
 # 설치할 스킬 폴더(영문 별칭 -sentence 포함).
 SKILLS=(im-ai-copyeditor im-ai-copyeditor-sentence im-ai-copyeditor-ai im-ai-copyeditor-grammar im-ai-copyeditor-grill)
 
+# 통합·삭제돼 더 이상 배포하지 않는 옛 스킬. 업데이트 때 고아(끊긴 링크·옛 복사본)로 남지 않게 정리한다.
+LEGACY_SKILLS=(im-ai-copyeditor-trans)
+
 print_help() {
   cat <<'H'
 사용법: ./install.sh [옵션]
@@ -131,6 +134,18 @@ install_skills_into() {  # $1=대상 skills 디렉토리
   local dir="$1"
   for s in "${SKILLS[@]}"; do
     [ -e "$SKILLS_SRC/$s" ] && install_one "$SKILLS_SRC/$s" "$dir/$s"
+  done
+  prune_legacy_into "$dir"
+}
+
+# 옛 스킬(LEGACY_SKILLS)이 대상에 남아 있으면 지운다 — 통합으로 사라진 명령의 고아·끊긴 링크 정리.
+prune_legacy_into() {  # $1=대상 skills 디렉토리
+  local dir="$1" dest
+  for s in "${LEGACY_SKILLS[@]}"; do
+    dest="$dir/$s"
+    if [ -L "$dest" ]; then run rm "$dest"; echo "옛 스킬 링크 정리: $dest"
+    elif [ -d "$dest" ]; then run rm -rf "$dest"; echo "옛 스킬 복사본 정리: $dest"
+    fi
   done
 }
 
