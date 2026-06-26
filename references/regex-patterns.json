@@ -4,8 +4,10 @@
   "patterns": [
     { "id": "G-1", "name": "예요/에요", "rulebook": "grammar", "regex": "(?<!아니)(?<!이)에요" },
     { "id": "G-2", "name": "됬→됐", "rulebook": "grammar", "regex": "됬" },
-    { "id": "G-14", "name": "굳어진 오타", "rulebook": "grammar", "regex": "(역활|설레임|오랫만에|희안|구지|닥달|으례|금새|폭팔|왠만|어의없|잠궜|담궜)" },
+    { "id": "G-14", "name": "굳어진 오타", "rulebook": "grammar", "regex": "(몇일|역활|설레임|오랫만에|오랜동안|희안|구지|닥달|으례|금새|폭팔|왠만|어의없|잠궜|담궜)" },
     { "id": "G-15", "name": "-ㄹ께", "rulebook": "grammar", "regex": "(할께|갈께|줄께|볼께|올께|들께|놀께)" },
+    { "id": "G-18", "name": "-이/-히 부사", "rulebook": "grammar", "regex": "(깨끗히|곰곰히|일일히)" },
+    { "id": "G-24", "name": "외래어 표기", "rulebook": "grammar", "regex": "(컨텐츠|메세지|캡쳐|디지탈|화이팅)" },
     { "id": "S-16", "name": "쉼표 과다(3개 이상)", "rulebook": "sentence", "regex": "(,[^,\\n]*){3,}" },
     { "id": "AI-4", "name": "마크다운 볼드", "rulebook": "ai", "regex": "\\*\\*[^*\\n]+\\*\\*" },
     { "id": "AI-4", "name": "강조용 따옴표", "rulebook": "ai", "regex": "[\"“][^\"”\\n]{1,30}[\"”]" }
