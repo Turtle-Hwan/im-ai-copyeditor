@@ -19,13 +19,13 @@
   - 표준국어대사전에 없는 표현은 바로 고치지 말고, 문맥과 장르를 함께 본다.
 - [다듬은 말](https://www.korean.go.kr/front/imprv/refineList.do?mn_id=158)
   - 어려운 외래어, 일본어투, 행정 용어를 쉬운 우리말로 바꿀 때 참고한다.
-  - `translationese-rules.md` 와 `style-guide.md` 의 공공언어 규칙을 보강한다.
+  - `sentence-rules.md` 와 `style-guide.md` 의 공공언어 규칙을 보강한다.
 - [쉬운 공문서 쓰기 길잡이](https://www.korean.go.kr/front/etcData/etcDataView.do?etc_seq=700)
   - 공문서와 안내문의 문장을 쉽고 명확하게 쓰는 기준으로 삼는다.
   - 공공 안내, 서비스 문구, 행정 문서에서는 쉬운 말과 짧은 구조를 우선한다.
 - [꼭 가려 써야 할 일본어 투 용어 50개](https://www.korean.go.kr/front/etcData/etcDataView.do?etc_seq=698)
   - 일본어투 용어와 문장 틀을 가려낼 때 참고한다.
-  - 영어 번역체와 섞어 보지 말고 `translationese-rules.md` 에서 별도 범주로 다룬다.
+  - 영어 번역체와 섞어 보지 말고 `sentence-rules.md` 의 번역투 범주에서 별도로 다룬다.
 - [표준 언어 예절](https://www.korean.go.kr/front/search/searchAllList.do?searchQuery=%ED%91%9C%EC%A4%80%20%EC%96%B8%EC%96%B4%20%EC%98%88%EC%A0%88)
   - 호칭, 지칭, 인사말, 높임 표현을 볼 때 참고한다.
   - `style-guide.md` 의 사물존칭, 간접높임, 객체높임 규칙을 보강한다.
@@ -44,12 +44,10 @@
 - `style-guide.md`
   - 표준 언어 예절과 온라인가나다의 답변을 참고하되, 개별 질의 답변은 일반 규칙으로 과장하지 않는다.
   - 높임의 대상이 사람인지, 그 사람과 연결된 소유물·신체·생각인지 먼저 본다.
-- `translationese-rules.md`
-  - 영어 직역, 일본어투, 어려운 공공언어를 나누어 본다.
-  - 뜻을 바꾸지 않고 한국어 술어와 조사로 되살릴 수 있을 때만 고친다.
 - `sentence-rules.md`
-  - 국립국어원 규범의 오류 교정보다는 문장 교열 관점의 군더더기 줄이기다.
-  - 규범이 아니라 문체 판단이므로 뜻이 흔들리면 고치지 않는다.
+  - 문장 교열 관점의 군더더기 줄이기와 영어·일본어 직역투 걷어내기를 함께 본다.
+  - 국립국어원 규범의 오류 교정이 아니라 문체 판단이므로, 뜻이 흔들리면 고치지 않는다.
+  - 번역투는 한국어 술어와 조사로 되살릴 수 있을 때만 고친다.
 
 ## 보수적으로 남겨야 할 것
 

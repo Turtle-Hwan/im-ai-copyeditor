@@ -35,7 +35,6 @@ SELF = os.path.basename(os.path.abspath(__file__))
 PACKAGES = {
     "im-ai-copyeditor": ("references", "scripts"),
     "im-ai-copyeditor-sentence": ("references", "scripts"),
-    "im-ai-copyeditor-trans": ("references", "scripts"),
     "im-ai-copyeditor-ai": ("references", "scripts"),
     "im-ai-copyeditor-grammar": ("references", "scripts"),
     "im-ai-copyeditor-grill": ("references",),

@@ -12,7 +12,7 @@
     {
       "name": "im-ai-copyeditor",
       "source": "./",
-      "description": "맞춤법·번역 문체·AI 문체·문장 간소화·문체를 한 문장씩 적용해, 진짜 교정·교열가처럼 뜻은 그대로 두고 다듬는 스킬(통합 + 세부 4종).",
+      "description": "맞춤법·문장(번역투·군더더기)·AI 문체·문체를 한 문장씩 적용해, 진짜 교정·교열가처럼 뜻은 그대로 두고 다듬는 스킬(통합 + 세부 3종).",
       "version": "0.3.0",
       "keywords": ["korean", "proofreading", "윤문", "첨삭", "번역 문체", "humanize"]
     }

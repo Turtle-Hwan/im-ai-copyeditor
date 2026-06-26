@@ -7,9 +7,8 @@ labels: ["rule-or-example"]
 
 ## 종류
 - [ ] 맞춤법 / 문체 grammar-style
-- [ ] 번역 문체 translationese
 - [ ] AI 문체 ai-tell
-- [ ] 문장 간소화 sentence
+- [ ] 문장 교정(번역투·군더더기) sentence
 - [ ] 공공언어 / 일본어투 public-language
 
 ## 어색한 표현
@@ -22,6 +21,3 @@ labels: ["rule-or-example"]
 
 ## 이유
 한 줄 설명이 있으면 좋아요. 없어도 됩니다.
-
-## 정규식
-정규식으로 쉽게 잡히는 표현이면 적어 주세요. 몰라도 됩니다.

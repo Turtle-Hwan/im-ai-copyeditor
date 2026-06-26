@@ -20,7 +20,7 @@ case "${1:-}" in
   *) echo "모르는 인자: $1" >&2; exit 2 ;;
 esac
 
-SKILLS=(im-ai-copyeditor im-ai-copyeditor-sentence im-ai-copyeditor-trans im-ai-copyeditor-ai im-ai-copyeditor-grammar im-ai-copyeditor-grill)
+SKILLS=(im-ai-copyeditor im-ai-copyeditor-sentence im-ai-copyeditor-ai im-ai-copyeditor-grammar im-ai-copyeditor-grill im-ai-copyeditor-trans)
 
 remove_if_ours() {  # $1=dest, $2=src
   local dest="$1" src="$2"

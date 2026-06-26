@@ -46,10 +46,9 @@ AI가 쓴 글이든 사람이 쓴 글이든, 진짜 교정·교열가처럼 한 
 
 | 명령어 | 기능 |
 |---|---|
-| `/im-ai-copyeditor:all` | **통합**. 맞춤법 → 번역 문체 → AI 문체 → 문장 간소화 → 문체를 한 문장씩 차례로 적용 |
+| `/im-ai-copyeditor:all` | **통합**. 맞춤법 → 문장(번역투·군더더기) → AI 문체 → 문체를 한 문장씩 차례로 적용 |
 | `/im-ai-copyeditor:grammar` | 맞춤법·문체 교정. 예요/되/안, 띄어쓰기, 문장 부호, 외래어 표기, 종결문체 통일, 사물존칭 |
-| `/im-ai-copyeditor:sentence` | 문장 간소화. 적·의·것·들, 군더더기 "있다", 군더더기 피동, 조사 다듬기 |
-| `/im-ai-copyeditor:trans` | 번역 문체 제거. 피동→능동, 가지다·통해·대해, 무생물 주어, 대명사 남용 |
+| `/im-ai-copyeditor:sentence` | 문장 교정. 적·의·것·들·군더더기 빼기 + 번역투(피동→능동, 가지다, 무생물 주어, 대명사·전치사) 걷어내기 |
 | `/im-ai-copyeditor:ai` | AI 문체 제거. 첫째·둘째 나열, 결말 공식, 과장 어휘, 괄호·쉼표, 클리셰 |
 | `/im-ai-copyeditor:grill` | **대화형 공동 교정**. 전체 맥락·표현이 맞는지 한 번에 하나씩 되묻고, 합의되면 압축·재집필까지 |
 
@@ -76,7 +75,7 @@ curl -fsSL https://raw.githubusercontent.com/Turtle-Hwan/im-ai-copyeditor/main/i
 /plugin install im-ai-copyeditor@im-ai-copyeditor
 ```
 
-플러그인으로 깔면 `/im-ai-copyeditor:all`·`:grammar`·`:sentence`·`:trans`·`:ai` 슬래시 명령이 생겨요. 위 한 줄 설치는 **스킬**만 깔아 이름이나 자연어로 부르고요. 부르는 방식만 다를 뿐 규칙은 똑같아요.
+플러그인으로 깔면 `/im-ai-copyeditor:all`·`:grammar`·`:sentence`·`:ai` 슬래시 명령이 생겨요. 위 한 줄 설치는 **스킬**만 깔아 이름이나 자연어로 부르고요. 부르는 방식만 다를 뿐 규칙은 똑같아요.
 
 ### 도구별 설치 위치
 
@@ -125,9 +124,8 @@ cd im-ai-copyeditor
 규칙은 모두 `references/` 폴더에 글로 정리했어요. 국립국어원 어문 규범과 번역학·문체 논문에 근거해요.
 
 - `grammar-rules.md`: 맞춤법·문장 부호·외래어 표기. 국립국어원 어문 규범 기준.
-- `translationese-rules.md`: 번역 문체. 영어 직역, 일본어투, 어려운 공공언어를 실용 규칙으로 옮겼어요.
 - `ai-tell-rules.md`: AI 문체. AI 글과 사람 글을 비교한 논문에 근거해요.
-- `sentence-rules.md`: 문장 간소화. 책 [『내 문장이 그렇게 이상한가요?』](https://product.kyobobook.co.kr/detail/S000001863138)에서
+- `sentence-rules.md`: 문장 교정. 군더더기 빼기와 영어·일본어 번역투 걷어내기. 책 [『내 문장이 그렇게 이상한가요?』](https://product.kyobobook.co.kr/detail/S000001863138)에서
   영감을 받았어요. 김정선 지음, 유유, 2016.
 - `style-guide.md`: 문체·경어법. 종결문체 일관성, 사물존칭·간접높임, 쉬운 공공언어.
 - `prime-directives.md`: 모든 명령이 함께 지키는 약속.

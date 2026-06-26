@@ -1,11 +1,10 @@
 {
   "id": "im-ai-copyeditor",
   "name": "im-ai-copyeditor",
-  "description": "한국어 문장을 문장 단위로 첨삭·윤문하는 스킬 묶음. 맞춤법·번역 문체·AI 문체·문장 간소화를 적용하되 뜻은 그대로 둔다.",
+  "description": "한국어 문장을 문장 단위로 첨삭·윤문하는 스킬 묶음. 맞춤법·문장(번역투·군더더기)·AI 문체·문체를 적용하되 뜻은 그대로 둔다.",
   "skills": [
     "skills/im-ai-copyeditor",
     "skills/im-ai-copyeditor-sentence",
-    "skills/im-ai-copyeditor-trans",
     "skills/im-ai-copyeditor-ai",
     "skills/im-ai-copyeditor-grammar",
     "skills/im-ai-copyeditor-grill"
