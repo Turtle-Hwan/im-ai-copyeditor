@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/logo.svg" alt="ai-copyeditor logo" width="100">
+
 # ai-copyeditor
 
 **진짜 교정·교열가처럼 문장 하나하나 꼼꼼히 첨삭해서 사람이 읽기 좋은 글로 다듬는 스킬**

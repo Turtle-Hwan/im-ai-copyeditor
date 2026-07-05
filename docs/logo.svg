@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1254 1254" role="img" aria-label="ai-copyeditor fountain pen logo">
+  <defs>
+    <linearGradient id="paper-fill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6eedc"/>
+      <stop offset="1" stop-color="#efe2c8"/>
+    </linearGradient>
+    <linearGradient id="ink-fill" x1="0" y1="230" x2="0" y2="986" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#171715"/>
+      <stop offset="1" stop-color="#0d0d0b"/>
+    </linearGradient>
+    <linearGradient id="correction-red" x1="378" y1="1018" x2="1012" y2="826" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d52b21"/>
+      <stop offset="0.55" stop-color="#df2e24"/>
+      <stop offset="1" stop-color="#c81f18"/>
+    </linearGradient>
+    <clipPath id="nib-slit-red-clip">
+      <rect x="619" y="930" width="16" height="50"/>
+    </clipPath>
+  </defs>
+
+  <rect width="1254" height="1254" rx="118" fill="url(#paper-fill)"/>
+
+  <g>
+    <path
+      d="M387 1085
+         C369 1090 355 1080 360 1061
+         C363 1048 374 1037 391 1029
+         C518 974 646 943 781 915
+         C872 896 948 871 1018 842
+         C952 884 876 910 786 932
+         C641 967 513 1005 397 1078
+         C394 1081 390 1083 387 1085
+         Z"
+      fill="url(#correction-red)"/>
+  </g>
+
+  <g>
+    <rect x="514" y="220" width="226" height="132" rx="10" fill="url(#ink-fill)"/>
+    <path
+      d="M514 365
+         H740
+         C750 418 774 514 824 558
+         C779 616 739 691 706 784
+         C684 846 664 904 648 936
+         C644 950 640 962 636 970
+         C631 974 623 974 618 970
+         C612 962 608 950 606 936
+         C590 904 570 846 548 784
+         C515 691 475 616 430 558
+         C480 514 504 418 514 365
+         Z"
+      fill="url(#ink-fill)"/>
+    <circle cx="627" cy="574" r="31" fill="#f2e7d0"/>
+    <rect x="619" y="596" width="16" height="384" fill="#f2e7d0"/>
+    <path
+      d="M387 1085
+         C369 1090 355 1080 360 1061
+         C363 1048 374 1037 391 1029
+         C518 974 646 943 781 915
+         C872 896 948 871 1018 842
+         C952 884 876 910 786 932
+         C641 967 513 1005 397 1078
+         C394 1081 390 1083 387 1085
+         Z"
+      fill="url(#correction-red)"
+      clip-path="url(#nib-slit-red-clip)"/>
+  </g>
+</svg>
