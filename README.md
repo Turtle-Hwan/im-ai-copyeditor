@@ -157,7 +157,7 @@ python3 scripts/sync_skills.py --check  # 어긋남만 확인(검사가 이걸�
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Turtle-Hwan/im-ai-copyeditor&type=Date)](https://star-history.com/#Turtle-Hwan/im-ai-copyeditor&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=turtle-hwan/im-ai-copyeditor&type=Date)](https://www.star-history.com/#turtle-hwan/im-ai-copyeditor&Date)
 
 ## LICENSE
 
