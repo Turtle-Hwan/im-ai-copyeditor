@@ -1,0 +1,16 @@
+[
+  {"id":"F01","source":"이 기능의 역활에 대한 설명을 드릴께요.","must_change":true,"absent":["역활","께요"],"present":["역할"]},
+  {"id":"F02","source":"사회적인 현상의 분석을 위한 연구를 진행하고 있다.","must_change":true,"absent":["사회적인","연구를 진행하고 있다"],"present":["사회","현상","연구"]},
+  {"id":"F03","source":"# 되붙이기\n","must_change":true,"absent":["되붙이기"],"present":["# "]},
+  {"id":"F04","source":"- 확인 사항\n    - 메세지를 보낼께요.\n","must_change":true,"absent":["메세지","께요"],"present":["메시지","    - "]},
+  {"id":"F05","source":"그는 \"정말\" 빨랐다.","editable_quotes":["\"정말\""],"must_change":true,"absent":["\"정말\""],"present":["정말"]},
+  {"id":"F06","source":"그는 \"괜찮다\".라고 말했다.","must_change":true,"absent":["\".라고"],"present":["\"괜찮다.\""]},
+  {"id":"F07","source":"[회사명]은 2015년에 설립이 되었으며, 2019년에 지점의 개설을 진행했습니다.","must_change":true,"absent":["설립이 되었","개설을 진행"],"present":["[회사명]","2015","2019"]},
+  {"id":"F08","source":"한 연구의 결과에 따르면 생산성의 향상 폭이 정확히 47%에 달한다고 합니다.","must_change":true,"absent":["생산성의 향상 폭"],"present":["연구","47%","정확히"]},
+  {"id":"F09","source":"가격은 $5이고 배송비의 부과는 $2로 이루어집니다.","must_change":true,"absent":["배송비의 부과"],"present":["$5","$2"]},
+  {"id":"F10","source":"> 이 기능의 역활을 설명할께요.\n","edit_blockquotes":true,"must_change":true,"absent":["역활","께요"],"present":["> ","역할"]},
+  {"id":"F11","source":"타깃·툴팁 — 준비 및 대기 상태의 관리가 이루어진다.","must_change":true,"absent":["·","—","관리가 이루어진다"],"present":["타깃","툴팁","준비","대기"]},
+  {"id":"F12","source":"이 기능은 매우 빠른 속도로 동작을 수행하고 있으며, 효율성 또한 굉장히 높다는 점이 특징입니다.","must_change":true,"absent":["동작을 수행","높다는 점이 특징"],"present":["매우","굉장히","효율"]},
+  {"id":"F13","source":"내일 다시 만나요.","must_change":false,"absent":[],"present":["내일 다시 만나요."]},
+  {"id":"F14","source":"그는 \"원문의 역활·표현 — 그대로\"라고 말했다.\n\n```txt\n메세지·원문 — 유지\n```\n","must_change":false,"absent":[],"present":["\"원문의 역활·표현 — 그대로\"","```txt\n메세지·원문 — 유지\n```"]}
+]
