@@ -14,13 +14,13 @@ class TestSkillContracts(unittest.TestCase):
             text = (ROOT / "skills" / name / "SKILL.md").read_text(encoding="utf-8")
             self.assertIn("final.md --check-punctuation", text)
 
-    def test_change_ratio_is_not_an_output_grade(self):
+    def test_existing_grades_do_not_require_unnecessary_edits(self):
         prime = (ROOT / "references" / "prime-directives.md").read_text(encoding="utf-8")
         skill = (ROOT / "skills" / "im-ai-copyeditor" / "SKILL.md").read_text(encoding="utf-8")
-        self.assertNotIn("등급 {A~D}", skill)
+        self.assertIn("등급 {A~D}", skill)
         self.assertNotIn("변경량 10~25%", prime)
         self.assertIn("변경률 0%도 정상", prime)
-        self.assertIn("다른 항목이 좋아도 상쇄할 수 없다", prime)
+        self.assertIn("자동 검사 실패는 다른 항목과 무관하게 D", prime)
 
     def test_known_fact_invention_instructions_do_not_return(self):
         ai = (ROOT / "references" / "ai-tell-rules.md").read_text(encoding="utf-8")
