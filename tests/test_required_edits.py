@@ -45,12 +45,6 @@ class TestRequiredEdits(unittest.TestCase):
                 self.assertEqual(final, "previous")
             return final, output.getvalue()
 
-    def test_short_style_edits_are_not_rejected_by_edit_distance(self):
-        for before, after in (("# 되붙이기\n", "# 재조립\n"),
-                              ("상기 내용을 숙지하시기 바랍니다", "위 내용을 확인해 주세요")):
-            with self.subTest(before=before):
-                self.assertEqual(self.assemble(before, {before.lstrip("# ").strip(): after.lstrip("# ").strip()})[0], after)
-
     def test_numbers_do_not_lock_korean_particles_or_surrounding_prose(self):
         for before, after in (("약 10–20명에게 안내한다.", "약 10–20명을 대상으로 안내한다."),
                               ("가격은 $5이고 배송비는 $2이다.", "가격은 $5이며 배송비는 $2이다.")):

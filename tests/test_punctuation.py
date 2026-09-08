@@ -37,7 +37,7 @@ const a = '키·값 — 보존';
 
 
 class TestPunctuation(unittest.TestCase):
-    def assemble(self, source, rewrite, expected_code=0, preserve=(), strict=True):
+    def assemble(self, source, rewrite, expected_code=0, preserve=(), strict=True, options=()):
         segments = seg.segment(source, preserve)
         worksheet = []
         for s in segments:
@@ -51,7 +51,7 @@ class TestPunctuation(unittest.TestCase):
             (root / "segments.json").write_text(json.dumps({"segments": segments, "preserve_text": preserve}), encoding="utf-8")
             (root / "worksheet.md").write_text("\n".join(worksheet), encoding="utf-8")
             (root / "final.md").write_text("previous", encoding="utf-8")
-            args = [str(root / "segments.json"), str(root / "worksheet.md")]
+            args = [str(root / "segments.json"), str(root / "worksheet.md"), *options]
             if strict:
                 args.append("--check-punctuation")
             with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
@@ -90,6 +90,22 @@ class TestPunctuation(unittest.TestCase):
                               ("10–25%", "10–30%"), ("A·B", "“A·B”")):
             with self.subTest(before=before):
                 self.assemble(f"기존 표현 {before}를 그대로 보존한다.\n", lambda text: text.replace(before, after), 4)
+
+    def test_other_edits_do_not_excuse_remaining_punctuation(self):
+        for source in ("메세지·상태를 확인한다.\n", "# 메세지 — 상태\n",
+                       "- 메세지·상태\n", "| 메세지 — 상태 |\n| --- |\n"):
+            with self.subTest(source=source):
+                self.assemble(source, lambda text: text.replace("메세지", "메시지"), 4)
+
+    def test_short_punctuation_edit_keeps_default_cap_and_explicit_override(self):
+        self.assertEqual(self.assemble("A·B", lambda text: "A,B"), "A,B")
+        self.assemble("A·B", lambda text: "A와 B", 3)
+        self.assertEqual(self.assemble("A·B", lambda text: "A와 B", options=("--max-change", "1")), "A와 B")
+        self.assemble("A·B", lambda text: text, 4, options=("--max-change", "1"))
+
+    def test_clean_prose_needs_no_forced_edit(self):
+        source = "내일 다시 만나요.\n"
+        self.assertEqual(self.assemble(source, lambda text: text), source)
 
     def test_inline_code_fence_length_and_quote_boundaries(self):
         text = '``x = `a. b.` ``와 “안녕. 반가워.”를 보존한다. **다음 문장.** 마지막 문장.\n'

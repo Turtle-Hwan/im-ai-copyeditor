@@ -7,7 +7,7 @@
 핵심 안전장치:
   - 작업표 검사: ID 중복·누락·추가와 미작성 칸을 거부한다.
     칸 안의 문장 병합·분할과 의미 보존은 별도 검토가 필요하다.
-  - 변경량 검사: 전체 변경량이 30% 를 넘으면 경고한다. 명시한 상한만 강제한다.
+  - 변경량 검사: 전체 변경량이 30% 를 넘으면 경고하고, 기본 상한 50% 를 넘으면 중단한다.
   - 구조 기호와 코드 블록은 그대로 두며 인라인 보호 표현 변경을 거부한다.
   - --check-punctuation 으로 중간점/구분용 대시 잔존 검사를 켤 수 있다.
 
@@ -124,11 +124,11 @@ def main(argv=None):
     ap.add_argument("segments", help="segment.py 가 만든 segments.json")
     ap.add_argument("worksheet", help="에이전트가 채운 worksheet.md")
     ap.add_argument("--out", default=None, help="최종본 출력 경로(기본: segments.json 옆 final.md)")
-    ap.add_argument("--max-change", type=float, default=None, help="선택적 변경률 상한(기본: 경고만)")
+    ap.add_argument("--max-change", type=float, default=0.5, help="변경률 상한(기본: 0.5)")
     ap.add_argument("--check-punctuation", action="store_true",
                     help="보호 구간 밖 중간점과 구분용 대시가 남으면 저장하지 않고 종료 코드 4")
     args = ap.parse_args(argv)
-    if args.max_change is not None and (not math.isfinite(args.max_change) or not 0 <= args.max_change <= 1):
+    if not math.isfinite(args.max_change) or not 0 <= args.max_change <= 1:
         ap.error("--max-change 는 0 이상 1 이하의 유한한 값이어야 합니다.")
 
     with open(args.segments, "r", encoding="utf-8") as f:
@@ -199,7 +199,7 @@ def main(argv=None):
     final = "".join(parts)
     change = (tot_dist / tot_core) if tot_core else 0.0
 
-    if args.max_change is not None and change > args.max_change:
+    if change > args.max_change:
         print(f"ABORT: 변경률 {change:.1%} > 한계 {args.max_change:.0%} — 결과를 저장하지 않았습니다.",
               file=sys.stderr)
         return 3

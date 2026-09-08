@@ -55,8 +55,10 @@ class TestValidation(unittest.TestCase):
         self.run_case("<!-- SEG 1 prose -->\n윤문: 원래 문장입니다!\n규칙: 변경없음", 2)
 
     def test_overedit_preserves_previous_output(self):
-        self.run_case("<!-- SEG 1 prose -->\n윤문: 다른 내용으로 전부 새로 쓴 아주 긴 문장입니다.\n규칙: S-1", 3,
-                      options=("--max-change", "0.5"))
+        for options in ((), ("--max-change", "0.5")):
+            with self.subTest(options=options):
+                self.run_case("<!-- SEG 1 prose -->\n윤문: 다른 내용으로 전부 새로 쓴 아주 긴 문장입니다.\n규칙: S-1", 3,
+                              options=options)
 
     def test_rule_without_actual_edit_rejected(self):
         self.run_case("<!-- SEG 1 prose -->\n윤문: 원래 문장입니다.\n규칙: S-1", 2)
