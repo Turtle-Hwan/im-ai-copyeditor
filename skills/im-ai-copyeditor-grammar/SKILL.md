@@ -25,13 +25,14 @@ metadata:
 **Phase 0** — 상태 한 줄: `im-ai-copyeditor-grammar 맞춤법·문체 / run_id: {YYYY-MM-DD-NNN}`
 **Phase 1** — 입력을 `_workspace/{run_id}/01_input.txt` 저장.
 **Phase 2** — `python3 $SKILL/scripts/segment.py _workspace/{run_id}/01_input.txt --outdir _workspace/{run_id}` → segments.json + worksheet.md, 문장 수 N 확인.**Phase 3** — 룰북 로드: `$SKILL/references/grammar-rules.md` 와 `$SKILL/references/style-guide.md`, 공통 `$SKILL/references/prime-directives.md`. 먼저 글 전체의 우세 문체를 정해요. 해요체·합니다체·한다체 중 하나로.
-**Phase 4** — worksheet.md 의 문장 칸을 위에서 아래로 읽으며 맞춤법 규칙 G-를 먼저 바로잡고 문체 규칙 ST-를 맞춰 **윤문/규칙** 채움. 고칠 게 없으면 원문 그대로 + `변경없음`. 문장 합치기·나누기·순서 바꾸기 금지, '그대로 둘 줄' 불가침, 건드리지 않는 것 보존.
-**Phase 5** — `python3 $SKILL/scripts/reassemble.py _workspace/{run_id}/segments.json _workspace/{run_id}/worksheet.md --out _workspace/{run_id}/final.md`. ID 중복·누락·추가, 빈 칸, 잘못된 `변경없음`은 2, 과윤문은 3으로 멈춰요. 칸 안의 문장 병합·분할과 의미 보존은 별도로 검토해요. 실패하면 고친 뒤 다시 실행하며, 이전 결과를 이번 결과로 반환하지 않아요.
+**Phase 4** — worksheet.md 의 문장 칸을 위에서 아래로 읽으며 맞춤법 규칙 G-를 먼저 바로잡고 문체 규칙 ST-를 맞춰 **윤문/규칙** 채움. 고칠 게 없으면 원문 그대로 + `변경없음`. 한 칸 안의 긴 문장은 나눌 수 있지만 칸 병합과 정보 순서 변경은 하지 않아요. '그대로 둘 줄'과 보호 정보는 보존해요.
+**Phase 5** — `python3 $SKILL/scripts/reassemble.py _workspace/{run_id}/segments.json _workspace/{run_id}/worksheet.md --out _workspace/{run_id}/final.md`. ID 중복·누락·추가, 빈 칸, 잘못된 `변경없음`은 2, 명시한 `--max-change` 상한 초과는 3으로 멈춰요. 변경률은 기본적으로 의미 재검토 경고예요. 실패하면 고친 뒤 다시 실행하며, 이전 결과를 이번 결과로 반환하지 않아요.
 **Phase 6** — 반환: 상태 한 줄 / 바뀐 문장 전·후 표 / final.md / 자체검증 6가지.
 
 제목·목록·표 셀의 텍스트도 교정 대상이에요. 보호 표현이나 Markdown 행·열이 바뀌면 종료 코드 4로 멈춰요.
 사용자가 중간점/구분용 대시 제거를 요청한 경우에만 공통 약속 8절을 적용하고 Phase 5에 `--check-punctuation`을 추가해요.
 보호할 고유명사·기술 표현은 분절 전에 `--preserve-text '원문의 정확한 표현'`으로 지정해요.
+장식용 따옴표와 작성자 인용 블록의 편집 옵션, 제외된 HTML 처리, `부분 재조립` 보고는 공통 약속 2절을 따라요. 스크립트 통과 후에도 의미와 교정 누락을 별도로 검토해요.
 
 ## 옵션
 - `장르: 칼럼|리포트|블로그|공적` · `강도: 보수|기본|적극` 기본값 기본
