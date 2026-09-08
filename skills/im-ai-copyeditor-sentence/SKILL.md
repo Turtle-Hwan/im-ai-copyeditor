@@ -28,7 +28,7 @@ metadata:
 **Phase 2** — `python3 $SKILL/scripts/segment.py _workspace/{run_id}/01_input.txt --outdir _workspace/{run_id}` → segments.json + worksheet.md, 문장 수 N 확인.
 **Phase 3** — 룰북 로드: `$SKILL/references/sentence-rules.md` 와 공통 `$SKILL/references/prime-directives.md`.
 **Phase 4** — worksheet.md 의 문장 칸을 위에서 아래로, sentence-rules.md 의 적용 순서대로(빼기 → 번역투 → 괄호·쉼표·만연체 마무리) 다듬어 **윤문/규칙** 채움. 고칠 게 없으면 원문 그대로 + `변경없음`. 문장 합치기·나누기·순서 바꾸기 금지, '그대로 둘 줄' 불가침, 건드리지 않는 것 보존.
-**Phase 5** — `python3 $SKILL/scripts/reassemble.py _workspace/{run_id}/segments.json _workspace/{run_id}/worksheet.md --out _workspace/{run_id}/final.md`. 문장 수 불일치는 2, 과윤문은 3으로 멈춘다. 고친 뒤 다시 실행.
+**Phase 5** — `python3 $SKILL/scripts/reassemble.py _workspace/{run_id}/segments.json _workspace/{run_id}/worksheet.md --out _workspace/{run_id}/final.md`. ID 중복·누락·추가, 빈 칸, 잘못된 `변경없음`은 2, 과윤문은 3으로 멈춘다. 칸 안의 문장 병합·분할과 의미 보존은 별도 검토한다. 실패하면 고친 뒤 다시 실행하며, 이전 결과를 이번 결과로 반환하지 않는다.
 **Phase 6** — 반환: 상태 한 줄 / 바뀐 문장 전·후 표 / final.md / 자체검증 6가지.
 
 ## 옵션

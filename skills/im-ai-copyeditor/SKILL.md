@@ -33,7 +33,7 @@ run_id 는 cwd 기준 `_workspace/{YYYY-MM-DD-NNN}/`. 당일 폴더가 있으면
 **Phase 1 — 입력 저장**
 입력 텍스트나 파일을 `_workspace/{run_id}/01_input.txt` 로 저장.
 
-**Phase 2 — 문장 분절. 유일한 비-LLM 도구다**
+**Phase 2 — 문장 분절**
 ```
 python3 $SKILL/scripts/segment.py _workspace/{run_id}/01_input.txt --outdir _workspace/{run_id}
 ```
@@ -59,8 +59,9 @@ python3 $SKILL/scripts/segment.py _workspace/{run_id}/01_input.txt --outdir _wor
 ```
 python3 $SKILL/scripts/reassemble.py _workspace/{run_id}/segments.json _workspace/{run_id}/worksheet.md --out _workspace/{run_id}/final.md
 ```
-- 문장 수 불일치는 종료 코드 2다. 누락·병합된 문장을 워크시트에서 고치고 다시 실행한다.
+- ID 중복·누락·추가, 빈 윤문/규칙 칸, 잘못된 `변경없음` 표기는 종료 코드 2다. 작업표를 고치고 다시 실행한다. 칸 안의 문장 병합·분할과 의미 보존은 별도로 대조한다.
 - 변경량 50% 초과는 종료 코드 3이다. 과윤문이니 보수적으로 다시 다듬는다.
+- 검증 실패 시 기존 결과 파일은 유지된다. 이전 파일을 이번 실행의 결과로 반환하지 않는다.
 
 **Phase 6 — 반환**
 1. 한 줄 상태: `완료. {N}문장 / 변경 {k}건 / 변경량 {x}% / 등급 {A~D}`

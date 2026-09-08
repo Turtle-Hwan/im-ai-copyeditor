@@ -44,8 +44,8 @@ class TestRoundtrip(unittest.TestCase):
             rebuilt = seg.reconstruct(segments)
             self.assertEqual(rebuilt, text, f"샘플 {i} 손실 발생")
 
-    def test_unmodified_worksheet_reproduces_input(self):
-        """윤문을 비워 둔(=변경 없음) 워크시트는 입력을 그대로 복원한다."""
+    def test_reviewed_unchanged_worksheet_reproduces_input(self):
+        """명시적으로 변경없음 검토를 마친 워크시트는 원래 줄바꿈까지 복원한다."""
         for i, text in enumerate(SAMPLES):
             if not text:
                 continue
@@ -54,6 +54,12 @@ class TestRoundtrip(unittest.TestCase):
                 with open(inp, "w", encoding="utf-8") as f:
                     f.write(text)
                 self.assertEqual(seg.main([inp, "--outdir", d]), 0)
+                worksheet = "\n".join(
+                    f"<!-- SEG {s['idx']} prose -->\n윤문: {s['core']}\n규칙: 변경없음\n"
+                    for s in seg.segment(text) if s["kind"] == "prose"
+                )
+                with open(os.path.join(d, "worksheet.md"), "w", encoding="utf-8") as f:
+                    f.write(worksheet)
                 rc = rea.main([
                     os.path.join(d, "segments.json"),
                     os.path.join(d, "worksheet.md"),
@@ -140,10 +146,12 @@ class TestRoundtrip(unittest.TestCase):
             with open(wp, encoding="utf-8") as f:
                 content = f.read()
             content = content.replace("윤문: ", "윤문: 완전히 다른 매우 긴 문장으로 통째로 바꿔버린다 정말로.", 1)
+            content = content.replace("규칙: ", "규칙: S-1", 1)
             with open(wp, "w", encoding="utf-8") as f:
                 f.write(content)
             rc = rea.main([os.path.join(d, "segments.json"), wp, "--out", os.path.join(d, "final.md")])
             self.assertEqual(rc, 3, "과윤문(>50%)은 abort(3) 이어야 함")
+            self.assertFalse(os.path.exists(os.path.join(d, "final.md")))
 
     def test_cli_segment_runs(self):
         inp = os.path.join(ROOT, "tests", "sample_in.txt")
