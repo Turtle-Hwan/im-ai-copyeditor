@@ -24,25 +24,19 @@ import os
 import re
 import sys
 
-# 구조(structure) 행 = 윤문 대상이 아니라 그대로 통과시키는 줄.
-# 마크다운 헤딩 · 리스트 · 인용 · 표 · 코드펜스 · 수평선 등.
-STRUCTURE_RE = re.compile(
-    r"""^\s*(
-        \#{1,6}\s        |   # 헤딩
-        [-*+]\s          |   # 불릿
-        \d{1,2}[.)]\s    |   # 번호 목록(1~2자리만 — '1980.' 같은 연도 오인 방지)
-        >\s?             |   # 인용
-        \|               |   # 표
-        (-{3,}|\*{3,}|_{3,})\s*$  |  # 수평선
-        ```              |   # 코드펜스
-        ~~~                  # 코드펜스
-    )""",
-    re.VERBOSE,
-)
-FENCE_RE = re.compile(r"^\s*(```|~~~)")
+from text_guards import protected_spans, table_pipes
+
+FENCE_RE = re.compile(r"^[ \t]*(`{3,}|~{3,})(.*)$")
+PREFIX_RE = re.compile(r"^( {0,3})(#{1,6}[ \t]+|[-*+][ \t]+(?:\[[ xX]\][ \t]+)?|\d{1,2}[.)][ \t]+)")
+DIVIDER_RE = re.compile(r"^[ \t]*(?:(?:-[ \t]*){3,}|(?:\*[ \t]*){3,}|(?:_[ \t]*){3,}|=+)[ \t]*$")
+TABLE_DIVIDER_RE = re.compile(r"^\s*\|?\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)*\|?\s*$")
+
+
+def is_table_divider(line):
+    return "|" in line and bool(TABLE_DIVIDER_RE.fullmatch(line))
 
 # 문장 종결: . ? ! … 。 (닫는 따옴표/괄호가 뒤따를 수 있음) + 뒤에 공백/끝.
-SENT_END_RE = re.compile(r'([.?!…。]+["\'”’」』)\]]*)(\s+|$)')
+SENT_END_RE = re.compile(r'([.?!…。]+["\'”’」』)\]*_]*)(\s+|$)')
 
 # 약어의 마침표는 문장 끝이 아니다 — 단일 '.' 매치일 때만 검사해 분절을 건너뛴다.
 #   이니셜리즘: A.I.  U.S.A.  e.g.  i.e.  Ph.D.  (한두 글자+마침표가 둘 이상 '연달아')
@@ -81,7 +75,7 @@ def _split_lines(prefix: str, core: str, trail: str):
     return out
 
 
-def split_sentences(block: str):
+def split_sentences(block: str, preserve=()):
     """프로즈 블록(여러 줄 가능)을 문장 단위로 자른다.
 
     각 문장을 (prefix, core, suffix) 로 반환한다.
@@ -97,7 +91,10 @@ def split_sentences(block: str):
     pending_prefix = lead
 
     last = len(lead)
+    protected = protected_spans(block, preserve)
     for m in SENT_END_RE.finditer(block, last):
+        if any(start <= m.start() < end for start, end in protected):
+            continue
         # 단일 '.' 가 약어(A.I.·e.g.·etc.)나 숫자(1980.·3.14.) 뒤면 문장 끝이 아니다 —
         # 건너뛰어 다음 종결까지 이어 붙인다(과대분절 방지; 한국어 문장은 거의 '다/요'로 끝남).
         if m.group(1) == "." and (
@@ -116,7 +113,7 @@ def split_sentences(block: str):
         m2 = re.search(r"\s*$", tail)
         trail = m2.group(0) if m2 else ""
         core = tail[: len(tail) - len(trail)]
-        if core and "\n" in core:
+        if core and "\n" in core and not any("\n" in block[start:end] for start, end in protected if end > last):
             # 무종결 + 줄바꿈: 한 덩어리로 두지 않고 줄 단위로 쪼갠다(문장 단위 의도).
             out.extend(_split_lines(pending_prefix, core, trail))
         elif core:
@@ -130,11 +127,12 @@ def split_sentences(block: str):
     return out
 
 
-def segment(text: str):
+def segment(text: str, preserve=()):
     segments = []
     idx = 0
     lines = text.splitlines(keepends=True)
-    in_fence = False
+    fence = None
+    in_table = False
     prose_buf = []  # 연속 프로즈 줄 모음
 
     def flush_prose():
@@ -143,29 +141,84 @@ def segment(text: str):
             return
         block = "".join(prose_buf)
         prose_buf.clear()
-        for prefix, core, suffix in split_sentences(block):
+        for prefix, core, suffix in split_sentences(block, preserve):
             idx += 1
             segments.append(
                 {"idx": idx, "kind": "prose", "prefix": prefix, "core": core, "suffix": suffix}
             )
 
-    for line in lines:
-        is_fence = bool(FENCE_RE.match(line))
-        stripped = line.strip()
-        is_structure = (
-            in_fence
-            or is_fence
-            or stripped == ""
-            or bool(STRUCTURE_RE.match(line))
-        )
-        if is_structure:
-            flush_prose()
+    def raw(value):
+        nonlocal idx
+        if value:
             idx += 1
-            segments.append({"idx": idx, "kind": "structure", "raw": line})
-            if is_fence:
-                in_fence = not in_fence
-        else:
-            prose_buf.append(line)
+            segments.append({"idx": idx, "kind": "structure", "raw": value})
+
+    def editable(value, prefix="", suffix="", role="text"):
+        nonlocal idx
+        # 제목, 목록 행, 표 셀은 구조를 유지하는 하나의 작업 칸으로 다룬다.
+        lead = value[:len(value) - len(value.lstrip())]
+        core = value.strip()
+        trail = value[len(value.rstrip()):]
+        if not core:
+            raw(prefix + value + suffix)
+            return
+        idx += 1
+        segments.append({"idx": idx, "kind": "prose", "prefix": prefix + lead,
+                         "core": core, "suffix": trail + suffix, "role": role})
+
+    for number, line in enumerate(lines):
+        marker = FENCE_RE.match(line)
+        list_prefix = PREFIX_RE.match(line)
+        if not fence and not marker and list_prefix and not list_prefix[2].startswith("#"):
+            marker = FENCE_RE.match(line[list_prefix.end():])
+        if fence or marker:
+            flush_prose()
+            raw(line)
+            if fence:
+                if marker and marker[1][0] == fence[0] and len(marker[1]) >= len(fence) and not marker[2].strip():
+                    fence = None
+            else:
+                fence = marker[1]
+            in_table = False
+            continue
+        # 인용, 들여쓴 코드, HTML/링크 정의는 보수적으로 그대로 둔다.
+        if not line.strip() or line.startswith(("    ", "\t")) or re.match(r"^ {0,3}(>|<|\[[^\]]+\]:)", line):
+            flush_prose()
+            raw(line)
+            in_table = False
+            continue
+        table_header = number + 1 < len(lines) and is_table_divider(lines[number + 1])
+        if is_table_divider(line):
+            flush_prose()
+            raw(line)
+            continue
+        pipes = table_pipes(line)
+        if pipes and (table_header or in_table):
+            flush_prose()
+            start = 0
+            for end in pipes:
+                editable(line[start:end], role="table-cell")
+                raw("|")
+                start = end + 1
+            editable(line[start:], role="table-cell")
+            in_table = True
+            continue
+        in_table = False
+        if DIVIDER_RE.fullmatch(line):
+            flush_prose()
+            raw(line)
+            continue
+        prefix = PREFIX_RE.match(line)
+        if prefix:
+            flush_prose()
+            value, suffix = line[prefix.end():], ""
+            if prefix[2].startswith("#"):
+                closing = re.search(r"[ \t]+#+[ \t]*(?:\r?\n)?$", value)
+                if closing:
+                    value, suffix = value[:closing.start()], value[closing.start():]
+            editable(value, prefix[0], suffix, role="heading" if prefix[2].startswith("#") else "list")
+            continue
+        prose_buf.append(line)
     flush_prose()
     return segments
 
@@ -184,7 +237,8 @@ def build_worksheet(segments) -> str:
     lines = [
         "# 윤문 워크시트",
         "",
-        "> 각 문장 칸의 **윤문:** 줄에 다듬은 문장을, **규칙:** 줄에 적용한 규칙 번호를 적습니다.",
+        "> 각 텍스트 칸의 **윤문:** 줄에 다듬은 내용을, **규칙:** 줄에 적용한 규칙 번호를 적습니다.",
+        "> 제목·목록 행·표 셀도 작업 칸입니다. 줄바꿈이나 표 열을 추가하지 마세요.",
         "> · 고칠 게 없으면 윤문에 원문을 그대로 옮기고 규칙에 `변경없음`.",
         "> · 문장을 합치거나 나누거나 순서를 바꾸지 마세요. '그대로 둘 줄'은 손대지 않습니다.",
         "> · 수치·고유명사·직접 인용·영어 약어·법령 조문은 그대로 둡니다.",
@@ -213,12 +267,16 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description="문장 부호 단위 분절 → 윤문 워크시트")
     ap.add_argument("input", help="입력 텍스트 파일")
     ap.add_argument("--outdir", default=None, help="출력 디렉토리(기본: 입력 파일과 같은 폴더)")
+    ap.add_argument("--preserve-text", action="append", default=[],
+                    help="정확히 보존할 고유명사/기술 표현. 필요하면 반복 지정")
     args = ap.parse_args(argv)
 
-    with open(args.input, "r", encoding="utf-8") as f:
+    with open(args.input, "r", encoding="utf-8", newline="") as f:
         text = f.read()
 
-    segments = segment(text)
+    if any(not value.strip() or value not in text for value in args.preserve_text):
+        ap.error("--preserve-text 는 원문에 있는 비어 있지 않은 표현이어야 합니다.")
+    segments = segment(text, args.preserve_text)
     rebuilt = reconstruct(segments)
     if rebuilt != text:
         print("오류: 자른 조각을 도로 이었더니 원문과 달라졌습니다 — 되붙일 때 원문이 손상될 수 있어 멈춥니다.",
@@ -232,7 +290,7 @@ def main(argv=None):
     seg_path = os.path.join(outdir, "segments.json")
     with open(seg_path, "w", encoding="utf-8") as f:
         json.dump(
-            {"source": os.path.abspath(args.input), "n_prose": n_prose,
+            {"source": os.path.abspath(args.input), "n_prose": n_prose, "preserve_text": args.preserve_text,
              "n_total": len(segments), "segments": segments},
             f, ensure_ascii=False, indent=2,
         )
@@ -240,7 +298,7 @@ def main(argv=None):
     with open(ws_path, "w", encoding="utf-8") as f:
         f.write(build_worksheet(segments))
 
-    print(f"문장 {n_prose}개로 나눔 (전체 조각 {len(segments)}개)")
+    print(f"텍스트 작업 칸 {n_prose}개로 나눔 (전체 조각 {len(segments)}개)")
     print(f"  segments.json → {seg_path}")
     print(f"  worksheet.md  → {ws_path}")
     return 0
