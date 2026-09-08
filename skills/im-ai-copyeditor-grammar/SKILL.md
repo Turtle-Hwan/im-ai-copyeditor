@@ -29,6 +29,10 @@ metadata:
 **Phase 5** — `python3 $SKILL/scripts/reassemble.py _workspace/{run_id}/segments.json _workspace/{run_id}/worksheet.md --out _workspace/{run_id}/final.md`. ID 중복·누락·추가, 빈 칸, 잘못된 `변경없음`은 2, 과윤문은 3으로 멈춰요. 칸 안의 문장 병합·분할과 의미 보존은 별도로 검토해요. 실패하면 고친 뒤 다시 실행하며, 이전 결과를 이번 결과로 반환하지 않아요.
 **Phase 6** — 반환: 상태 한 줄 / 바뀐 문장 전·후 표 / final.md / 자체검증 6가지.
 
+제목·목록·표 셀의 텍스트도 교정 대상이에요. 보호 표현이나 Markdown 행·열이 바뀌면 종료 코드 4로 멈춰요.
+사용자가 중간점/구분용 대시 제거를 요청한 경우에만 공통 약속 8절을 적용하고 Phase 5에 `--check-punctuation`을 추가해요.
+보호할 고유명사·기술 표현은 분절 전에 `--preserve-text '원문의 정확한 표현'`으로 지정해요.
+
 ## 옵션
 - `장르: 칼럼|리포트|블로그|공적` · `강도: 보수|기본|적극` 기본값 기본
 

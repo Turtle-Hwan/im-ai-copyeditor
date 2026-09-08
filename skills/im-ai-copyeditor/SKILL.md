@@ -38,6 +38,8 @@ run_id 는 cwd 기준 `_workspace/{YYYY-MM-DD-NNN}/`. 당일 폴더가 있으면
 python3 $SKILL/scripts/segment.py _workspace/{run_id}/01_input.txt --outdir _workspace/{run_id}
 ```
 → 원본 구조 정보 `segments.json` + 작업 파일 `worksheet.md` 생성. 나온 문장 수 N 을 확인한다.
+제목·목록 행·표 셀도 텍스트 작업 칸으로 포함한다. N은 문장 수와 이 작업 칸을 합친 수다.
+보호할 고유명사·기술 표현에 중간점이나 대시가 있으면 분절 전에 `--preserve-text '원문의 정확한 표현'`을 추가한다.
 
 **Phase 3 — 룰북 로드. 네 개 모두**
 순서대로 적용한다. 먼저 글 전체의 우세 문체를 정한다. 해요체·합니다체·한다체 중 하나로.
@@ -53,14 +55,16 @@ python3 $SKILL/scripts/segment.py _workspace/{run_id}/01_input.txt --outdir _wor
 - 맞춤법 → 문장(번역투·군더더기) → AI 문체 → 문체 순으로 룰을 적용해 **윤문:** 줄을 채운다.
 - **규칙:** 줄에 적용한 번호를 적는다. G-1·S-1·AI-3·ST-1 처럼. 바꿀 게 없으면 윤문에 원문을 그대로 옮기고 규칙은 `변경없음`.
 - 문장을 합치거나 나누거나 순서를 바꾸지 않는다. '그대로 둘 줄'은 절대 건드리지 않는다.
+- 제목·목록·표 셀의 텍스트도 빠짐없이 읽는다. 중간점과 구분용 대시는 공통 약속 8절에 따라 반드시 풀어 쓰되, 코드·인용·URL·숫자 범위·수식·지정한 고유명사는 보존한다.
 - 수치·고유명사·직접 인용·영어 약어·법령은 보존한다. 뜻이 흔들리면 원문을 유지한다.
 
 **Phase 5 — 재조립 + 가드**
 ```
-python3 $SKILL/scripts/reassemble.py _workspace/{run_id}/segments.json _workspace/{run_id}/worksheet.md --out _workspace/{run_id}/final.md
+python3 $SKILL/scripts/reassemble.py _workspace/{run_id}/segments.json _workspace/{run_id}/worksheet.md --out _workspace/{run_id}/final.md --check-punctuation
 ```
 - ID 중복·누락·추가, 빈 윤문/규칙 칸, 잘못된 `변경없음` 표기는 종료 코드 2다. 작업표를 고치고 다시 실행한다. 칸 안의 문장 병합·분할과 의미 보존은 별도로 대조한다.
 - 변경량 50% 초과는 종료 코드 3이다. 과윤문이니 보수적으로 다시 다듬는다.
+- 보호 표현/Markdown 행·열 변경 또는 중간점/구분용 대시 잔존은 종료 코드 4다. 해당 칸을 고치고 재검사한다. 통과하려고 검사 옵션을 빼거나 보호 예외를 늘리지 않는다.
 - 검증 실패 시 기존 결과 파일은 유지된다. 이전 파일을 이번 실행의 결과로 반환하지 않는다.
 
 **Phase 6 — 반환**
