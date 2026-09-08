@@ -24,10 +24,10 @@ import os
 import re
 import sys
 
-from text_guards import protected_spans, table_pipes
+from text_guards import QUOTE_RE, protected_spans, table_pipes
 
 FENCE_RE = re.compile(r"^[ \t]*(`{3,}|~{3,})(.*)$")
-PREFIX_RE = re.compile(r"^( {0,3})(#{1,6}[ \t]+|[-*+][ \t]+(?:\[[ xX]\][ \t]+)?|\d{1,2}[.)][ \t]+)")
+PREFIX_RE = re.compile(r"^( *)(#{1,6}[ \t]+|[-*+][ \t]+(?:\[[ xX]\][ \t]+)?|\d{1,2}[.)][ \t]+)")
 DIVIDER_RE = re.compile(r"^[ \t]*(?:(?:-[ \t]*){3,}|(?:\*[ \t]*){3,}|(?:_[ \t]*){3,}|=+)[ \t]*$")
 TABLE_DIVIDER_RE = re.compile(r"^\s*\|?\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)*\|?\s*$")
 
@@ -127,13 +127,14 @@ def split_sentences(block: str, preserve=()):
     return out
 
 
-def segment(text: str, preserve=()):
+def segment(text: str, preserve=(), *, edit_blockquotes=False):
     segments = []
     idx = 0
     lines = text.splitlines(keepends=True)
     fence = None
     in_table = False
     prose_buf = []  # 연속 프로즈 줄 모음
+    list_indents = []  # 활성 목록의 본문 들여쓰기
 
     def flush_prose():
         nonlocal idx
@@ -147,11 +148,13 @@ def segment(text: str, preserve=()):
                 {"idx": idx, "kind": "prose", "prefix": prefix, "core": core, "suffix": suffix}
             )
 
-    def raw(value):
+    def raw(value, review_required=False):
         nonlocal idx
         if value:
             idx += 1
             segments.append({"idx": idx, "kind": "structure", "raw": value})
+            if review_required:
+                segments[-1]["review_required"] = True
 
     def editable(value, prefix="", suffix="", role="text"):
         nonlocal idx
@@ -167,13 +170,25 @@ def segment(text: str, preserve=()):
                          "core": core, "suffix": trail + suffix, "role": role})
 
     for number, line in enumerate(lines):
+        original_line = line
+        quote = re.match(r"^ {0,3}(?:>[ \t]?)+", line)
+        outer_prefix = ""
+        if quote and edit_blockquotes:
+            flush_prose()
+            outer_prefix, line = quote[0], line[quote.end():]
+        indent = len(line) - len(line.lstrip(" "))
+        if line.strip():
+            while list_indents and indent < list_indents[-1]:
+                list_indents.pop()
+        code_indent = (list_indents[-1] if list_indents else 0) + 4
+        indented_code = line.startswith("\t") or indent >= code_indent
         marker = FENCE_RE.match(line)
         list_prefix = PREFIX_RE.match(line)
         if not fence and not marker and list_prefix and not list_prefix[2].startswith("#"):
             marker = FENCE_RE.match(line[list_prefix.end():])
         if fence or marker:
             flush_prose()
-            raw(line)
+            raw(original_line)
             if fence:
                 if marker and marker[1][0] == fence[0] and len(marker[1]) >= len(fence) and not marker[2].strip():
                     fence = None
@@ -181,20 +196,22 @@ def segment(text: str, preserve=()):
                 fence = marker[1]
             in_table = False
             continue
-        # 인용, 들여쓴 코드, HTML/링크 정의는 보수적으로 그대로 둔다.
-        if not line.strip() or line.startswith(("    ", "\t")) or re.match(r"^ {0,3}(>|<|\[[^\]]+\]:)", line):
+        # 직접 인용과 HTML은 자동 편집 범위에서 제외하되 검토 누락을 숨기지 않는다.
+        excluded_text = bool(re.match(r"^ {0,3}(>|<)", line))
+        if not line.strip() or indented_code or excluded_text or re.match(r"^ {0,3}\[[^\]]+\]:", line):
             flush_prose()
-            raw(line)
+            raw(original_line, review_required=excluded_text and not indented_code)
             in_table = False
             continue
         table_header = number + 1 < len(lines) and is_table_divider(lines[number + 1])
         if is_table_divider(line):
             flush_prose()
-            raw(line)
+            raw(original_line)
             continue
         pipes = table_pipes(line)
         if pipes and (table_header or in_table):
             flush_prose()
+            raw(outer_prefix)
             start = 0
             for end in pipes:
                 editable(line[start:end], role="table-cell")
@@ -206,7 +223,7 @@ def segment(text: str, preserve=()):
         in_table = False
         if DIVIDER_RE.fullmatch(line):
             flush_prose()
-            raw(line)
+            raw(original_line)
             continue
         prefix = PREFIX_RE.match(line)
         if prefix:
@@ -216,7 +233,13 @@ def segment(text: str, preserve=()):
                 closing = re.search(r"[ \t]+#+[ \t]*(?:\r?\n)?$", value)
                 if closing:
                     value, suffix = value[:closing.start()], value[closing.start():]
-            editable(value, prefix[0], suffix, role="heading" if prefix[2].startswith("#") else "list")
+            is_heading = prefix[2].startswith("#")
+            if not is_heading:
+                list_indents.append(prefix.end())
+            editable(value, outer_prefix + prefix[0], suffix, role="heading" if is_heading else "list")
+            continue
+        if outer_prefix:
+            editable(line, outer_prefix, role="blockquote")
             continue
         prose_buf.append(line)
     flush_prose()
@@ -240,7 +263,8 @@ def build_worksheet(segments) -> str:
         "> 각 텍스트 칸의 **윤문:** 줄에 다듬은 내용을, **규칙:** 줄에 적용한 규칙 번호를 적습니다.",
         "> 제목·목록 행·표 셀도 작업 칸입니다. 줄바꿈이나 표 열을 추가하지 마세요.",
         "> · 고칠 게 없으면 윤문에 원문을 그대로 옮기고 규칙에 `변경없음`.",
-        "> · 문장을 합치거나 나누거나 순서를 바꾸지 마세요. '그대로 둘 줄'은 손대지 않습니다.",
+        "> · 한 칸 안의 긴 문장은 나눠도 됩니다. 칸 병합과 정보 순서 변경은 하지 마세요.",
+        "> · 변경없음 칸도 맞춤법, 번역투, 군더더기와 요청한 문장부호 정리를 다시 확인하세요.",
         "> · 수치·고유명사·직접 인용·영어 약어·법령 조문은 그대로 둡니다.",
         "",
         "---",
@@ -269,6 +293,10 @@ def main(argv=None):
     ap.add_argument("--outdir", default=None, help="출력 디렉토리(기본: 입력 파일과 같은 폴더)")
     ap.add_argument("--preserve-text", action="append", default=[],
                     help="정확히 보존할 고유명사/기술 표현. 필요하면 반복 지정")
+    ap.add_argument("--editable-quote", action="append", default=[],
+                    help="직접 인용이 아닌 장식용 따옴표 표현(따옴표 포함). 필요하면 반복 지정")
+    ap.add_argument("--edit-blockquotes", action="store_true",
+                    help="직접 인용이 아닌 작성자의 Markdown 인용 블록을 편집 대상으로 포함")
     args = ap.parse_args(argv)
 
     with open(args.input, "r", encoding="utf-8", newline="") as f:
@@ -276,7 +304,9 @@ def main(argv=None):
 
     if any(not value.strip() or value not in text for value in args.preserve_text):
         ap.error("--preserve-text 는 원문에 있는 비어 있지 않은 표현이어야 합니다.")
-    segments = segment(text, args.preserve_text)
+    if any(not QUOTE_RE.fullmatch(value) or value not in text for value in args.editable_quote):
+        ap.error("--editable-quote 는 원문에 있는 따옴표로 감싼 표현이어야 합니다.")
+    segments = segment(text, args.preserve_text, edit_blockquotes=args.edit_blockquotes)
     rebuilt = reconstruct(segments)
     if rebuilt != text:
         print("오류: 자른 조각을 도로 이었더니 원문과 달라졌습니다 — 되붙일 때 원문이 손상될 수 있어 멈춥니다.",
@@ -291,6 +321,7 @@ def main(argv=None):
     with open(seg_path, "w", encoding="utf-8") as f:
         json.dump(
             {"source": os.path.abspath(args.input), "n_prose": n_prose, "preserve_text": args.preserve_text,
+             "editable_quotes": args.editable_quote,
              "n_total": len(segments), "segments": segments},
             f, ensure_ascii=False, indent=2,
         )
@@ -299,6 +330,8 @@ def main(argv=None):
         f.write(build_worksheet(segments))
 
     print(f"텍스트 작업 칸 {n_prose}개로 나눔 (전체 조각 {len(segments)}개)")
+    if any(s.get("review_required") for s in segments):
+        print("  인용/HTML 제외 구간은 별도 검토 필요. 직접 인용이 아닌 블록은 --edit-blockquotes 사용.")
     print(f"  segments.json → {seg_path}")
     print(f"  worksheet.md  → {ws_path}")
     return 0
