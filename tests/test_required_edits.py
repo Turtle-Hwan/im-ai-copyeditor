@@ -14,6 +14,12 @@ from text_guards import protected_values, punctuation_issues
 
 
 class TestRequiredEdits(unittest.TestCase):
+    def test_worksheet_keeps_heading_list_and_cell_context_visible(self):
+        source = "# 되붙이기\n- 설치하기\n\n| 제목 |\n| --- |\n| 내용 |\n"
+        worksheet = seg.build_worksheet(seg.segment(source))
+        for role in ('heading', 'list', 'table-cell'):
+            self.assertIn(f'prose role={role} -->', worksheet)
+
     def assemble(self, source, replacements, options=(), expected=0):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

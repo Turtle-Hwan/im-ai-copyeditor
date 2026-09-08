@@ -276,7 +276,8 @@ def build_worksheet(segments) -> str:
             lines.append(f"<!-- SEG {s['idx']} structure (수정 금지): {shown} -->")
             lines.append("")
         else:
-            lines.append(f"<!-- SEG {s['idx']} prose -->")
+            role = f" role={s['role']}" if s.get('role') else ""
+            lines.append(f"<!-- SEG {s['idx']} prose{role} -->")
             # 소프트랩으로 core 안에 줄바꿈이 있어도 표시는 한 줄로 접는다(원문 한 줄 = 한 문장).
             # 실제 재조립은 segments.json 의 core 를 쓰므로 표시 접기는 무손실에 영향 없음.
             shown_core = re.sub(r"\s*\n\s*", " ", s["core"])
