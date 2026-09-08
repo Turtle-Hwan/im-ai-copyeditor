@@ -27,9 +27,14 @@ metadata:
 **Phase 1** — 입력을 `_workspace/{run_id}/01_input.txt` 저장.
 **Phase 2** — `python3 $SKILL/scripts/segment.py _workspace/{run_id}/01_input.txt --outdir _workspace/{run_id}` → segments.json + worksheet.md, 문장 수 N 확인.
 **Phase 3** — 룰북 로드: `$SKILL/references/sentence-rules.md` 와 공통 `$SKILL/references/prime-directives.md`.
-**Phase 4** — worksheet.md 의 문장 칸을 위에서 아래로, sentence-rules.md 의 적용 순서대로(빼기 → 번역투 → 괄호·쉼표·만연체 마무리) 다듬어 **윤문/규칙** 채움. 고칠 게 없으면 원문 그대로 + `변경없음`. 문장 합치기·나누기·순서 바꾸기 금지, '그대로 둘 줄' 불가침, 건드리지 않는 것 보존.
-**Phase 5** — `python3 $SKILL/scripts/reassemble.py _workspace/{run_id}/segments.json _workspace/{run_id}/worksheet.md --out _workspace/{run_id}/final.md`. ID 중복·누락·추가, 빈 칸, 잘못된 `변경없음`은 2, 과윤문은 3으로 멈춘다. 칸 안의 문장 병합·분할과 의미 보존은 별도 검토한다. 실패하면 고친 뒤 다시 실행하며, 이전 결과를 이번 결과로 반환하지 않는다.
+**Phase 4** — worksheet.md 의 문장 칸을 위에서 아래로, sentence-rules.md 의 적용 순서대로(빼기 → 번역투 → 괄호·쉼표·만연체 마무리) 다듬어 **윤문/규칙** 채움. 고칠 게 없으면 원문 그대로 + `변경없음`. 문장을 합치거나 나누거나 순서를 바꾸지 않는다. '그대로 둘 줄'과 보호 정보는 보존한다.
+**Phase 5** — `python3 $SKILL/scripts/reassemble.py _workspace/{run_id}/segments.json _workspace/{run_id}/worksheet.md --out _workspace/{run_id}/final.md`. ID 중복·누락·추가, 빈 칸, 잘못된 `변경없음`은 2, 기본 변경률 상한 50% 초과는 3으로 멈춘다. 변경률 30% 초과는 의미 재검토 경고다. 요청에 별도 상한이 있으면 `--max-change`로 명시하며 임의로 높이지 않는다. 실패하면 고친 뒤 다시 실행하며, 이전 결과를 이번 결과로 반환하지 않는다.
 **Phase 6** — 반환: 상태 한 줄 / 바뀐 문장 전·후 표 / final.md / 자체검증 6가지.
+
+제목·목록·표 셀의 텍스트도 윤문 대상이다. 보호 표현이나 Markdown 행·열이 바뀌면 종료 코드 4로 멈춘다.
+사용자가 중간점/구분용 대시 제거를 요청한 경우에만 공통 약속 8절을 적용하고 Phase 5에 `--check-punctuation`을 추가한다.
+보호할 고유명사·기술 표현은 분절 전에 `--preserve-text '원문의 정확한 표현'`으로 지정한다.
+장식용 따옴표와 작성자 인용 블록의 편집 옵션, 제외된 HTML 처리, `부분 재조립` 보고는 공통 약속 2절을 따른다. 스크립트 통과 후에도 의미와 교정 누락을 별도로 검토한다.
 
 ## 옵션
 - `장르: 칼럼|리포트|블로그|공적` · `강도: 보수|기본|적극` 기본값 기본

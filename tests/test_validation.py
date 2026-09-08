@@ -14,7 +14,7 @@ import segment as seg
 
 
 class TestValidation(unittest.TestCase):
-    def run_case(self, worksheet, expected, source="원래 문장입니다.\n", existing=True):
+    def run_case(self, worksheet, expected, source="원래 문장입니다.\n", existing=True, options=()):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "segments.json").write_text(json.dumps({"segments": seg.segment(source)}), encoding="utf-8")
@@ -24,7 +24,7 @@ class TestValidation(unittest.TestCase):
                 out.write_bytes(b"previous verified output\r\n")
             stdout = io.StringIO()
             with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(io.StringIO()):
-                result = rea.main([str(root / "segments.json"), str(root / "worksheet.md"), "--out", str(out)])
+                result = rea.main([str(root / "segments.json"), str(root / "worksheet.md"), "--out", str(out), *options])
             self.assertEqual(result, expected)
             if expected:
                 self.assertNotIn("재조립 완료", stdout.getvalue())
@@ -55,7 +55,13 @@ class TestValidation(unittest.TestCase):
         self.run_case("<!-- SEG 1 prose -->\n윤문: 원래 문장입니다!\n규칙: 변경없음", 2)
 
     def test_overedit_preserves_previous_output(self):
-        self.run_case("<!-- SEG 1 prose -->\n윤문: 다른 내용으로 전부 새로 쓴 아주 긴 문장입니다.\n규칙: S-1", 3)
+        for options in ((), ("--max-change", "0.5")):
+            with self.subTest(options=options):
+                self.run_case("<!-- SEG 1 prose -->\n윤문: 다른 내용으로 전부 새로 쓴 아주 긴 문장입니다.\n규칙: S-1", 3,
+                              options=options)
+
+    def test_rule_without_actual_edit_rejected(self):
+        self.run_case("<!-- SEG 1 prose -->\n윤문: 원래 문장입니다.\n규칙: S-1", 2)
 
     def test_failure_does_not_create_output(self):
         self.run_case("<!-- SEG 1 prose -->\n윤문: \n규칙: ", 2, existing=False)

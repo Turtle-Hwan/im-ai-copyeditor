@@ -149,8 +149,9 @@ class TestRoundtrip(unittest.TestCase):
             content = content.replace("규칙: ", "규칙: S-1", 1)
             with open(wp, "w", encoding="utf-8") as f:
                 f.write(content)
-            rc = rea.main([os.path.join(d, "segments.json"), wp, "--out", os.path.join(d, "final.md")])
-            self.assertEqual(rc, 3, "과윤문(>50%)은 abort(3) 이어야 함")
+            rc = rea.main([os.path.join(d, "segments.json"), wp, "--out", os.path.join(d, "final.md"),
+                           "--max-change", "0.5"])
+            self.assertEqual(rc, 3, "명시한 상한 초과는 abort(3) 이어야 함")
             self.assertFalse(os.path.exists(os.path.join(d, "final.md")))
 
     def test_cli_segment_runs(self):

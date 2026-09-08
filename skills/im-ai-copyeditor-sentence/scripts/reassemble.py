@@ -7,8 +7,9 @@
 핵심 안전장치:
   - 작업표 검사: ID 중복·누락·추가와 미작성 칸을 거부한다.
     칸 안의 문장 병합·분할과 의미 보존은 별도 검토가 필요하다.
-  - 변경량 검사: 전체 변경량이 30% 를 넘으면 경고하고 50% 를 넘으면 멈춘다.
-  - '그대로 둘 줄'인 헤딩·목록·코드 따위는 원문 그대로 지나간다.
+  - 변경량 검사: 전체 변경량이 30% 를 넘으면 경고하고, 기본 상한 50% 를 넘으면 중단한다.
+  - 구조 기호와 코드 블록은 그대로 두며 인라인 보호 표현 변경을 거부한다.
+  - --check-punctuation 으로 중간점/구분용 대시 잔존 검사를 켤 수 있다.
 
 사용법:
   python3 reassemble.py <segments.json> <worksheet.md> [--out final.md] [--max-change 0.5]
@@ -22,6 +23,8 @@ import os
 import re
 import sys
 import tempfile
+
+from text_guards import protected_values, punctuation_issues, table_pipes
 
 SEG_HEADER_RE = re.compile(r"^<!--\s*SEG\s+(\d+)\s+(prose|structure)\b")
 
@@ -121,7 +124,9 @@ def main(argv=None):
     ap.add_argument("segments", help="segment.py 가 만든 segments.json")
     ap.add_argument("worksheet", help="에이전트가 채운 worksheet.md")
     ap.add_argument("--out", default=None, help="최종본 출력 경로(기본: segments.json 옆 final.md)")
-    ap.add_argument("--max-change", type=float, default=0.5, help="허용 최대 변경률(기본 0.5)")
+    ap.add_argument("--max-change", type=float, default=0.5, help="변경률 상한(기본: 0.5)")
+    ap.add_argument("--check-punctuation", action="store_true",
+                    help="보호 구간 밖 중간점과 구분용 대시가 남으면 저장하지 않고 종료 코드 4")
     args = ap.parse_args(argv)
     if not math.isfinite(args.max_change) or not 0 <= args.max_change <= 1:
         ap.error("--max-change 는 0 이상 1 이하의 유한한 값이어야 합니다.")
@@ -169,6 +174,21 @@ def main(argv=None):
             print(f"오류: 세그먼트 {s['idx']}의 변경없음 표기와 윤문이 다릅니다.", file=sys.stderr)
             return 2
         new_core = s["core"] if rule == "변경없음" else yun
+        if rule != "변경없음" and new_core == s["core"]:
+            print(f"오류: 세그먼트 {s['idx']}에 교정 규칙을 적었지만 실제 변경이 없습니다.", file=sys.stderr)
+            return 2
+        preserve = data.get("preserve_text", [])
+        editable_quotes = data.get("editable_quotes", [])
+        if protected_values(s["core"], preserve, editable_quotes) != protected_values(new_core, preserve, editable_quotes):
+            print(f"오류: 세그먼트 {s['idx']}의 코드/인용/URL/보호 표현이 변경되었습니다.", file=sys.stderr)
+            return 4
+        if s.get("role") and ("\n" in new_core or "\r" in new_core or
+                              (s["role"] == "table-cell" and table_pipes(new_core))):
+            print(f"오류: 세그먼트 {s['idx']}의 Markdown 행/열 구조가 변경되었습니다.", file=sys.stderr)
+            return 4
+        if args.check_punctuation and punctuation_issues(new_core, preserve, editable_quotes):
+            print(f"오류: 세그먼트 {s['idx']}에 중간점 또는 구분용 대시가 남아 있습니다.", file=sys.stderr)
+            return 4
         parts.append(s["prefix"] + new_core + s["suffix"])
         d = levenshtein(s["core"], new_core)
         tot_core += len(s["core"])
@@ -187,7 +207,12 @@ def main(argv=None):
         print(f"경고: 변경률 {change:.1%} > 30% — 의미 보존을 다시 점검하세요.", file=sys.stderr)
     out_path = args.out or os.path.join(os.path.dirname(os.path.abspath(args.segments)), "final.md")
     atomic_write(out_path, final)
-    print(f"재조립 완료: {len(prose_ids)}개 문장 칸, 변경 {len(diffs)}건, 변경률 {change:.1%}")
+    excluded = [s['idx'] for s in segments if s.get('review_required')]
+    if excluded:
+        print(f"부분 재조립: 별도 검토가 필요한 인용/HTML 칸 {excluded}. 전체 윤문 완료로 보고하지 마세요.")
+    else:
+        print("재조립 완료 (작업표 검사 통과, 교정 누락과 의미는 별도 검토)")
+    print(f"  {len(prose_ids)}개 텍스트 칸, 변경 {len(diffs)}건, 변경률 {change:.1%}")
     print(f"  final.md → {out_path}")
     return 0
 
